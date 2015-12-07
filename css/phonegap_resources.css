@@ -1,0 +1,51 @@
+﻿#Content #Categories {
+    display:none;
+    float:right;
+    overflow:hidden;
+}
+    #Content #Categories label {
+        float: left;
+        padding: 8px;
+        font-size:14px;
+    }
+    #Content #Categories select {
+        float: left;
+        padding: 7px;
+        background: #cfe1e7;
+        border: 0px;
+        font-size:14px;
+    }
+#Content #Items {
+    clear:both;
+    width:100%;
+    border-top:1px solid #41636e;
+    border-bottom:1px solid #41636e;
+    margin:20px 0px 20px 0px;
+    overflow:hidden;
+}
+    #Content #Items div {
+        display:none;
+        margin: 0px;
+        padding: 10px 0px 10px 0px;
+        overflow: hidden;
+    }
+        #Content #Items div a {
+            font-size: 13px;
+            line-height: 20px;
+        }
+#Loading{
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background:rgba(255,255,255,.8);
+}
+    #Loading img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -32px;
+        margin-left: -32px;
+    }

@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Map Search</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <link href="../css/phonegap_master.css" rel="Stylesheet" type="text/css" />
+    <link href="../css/phonegap_map.css" rel="Stylesheet" type="text/css" />
+    <link href="../css/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.touchSwipe.min.js" ></script>
+    <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.ui.touch-punch.js" ></script>
+    <script type="text/javascript" src="../js/jquery.touchSwipe.min.js" ></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.22&sensor=false"></script>
+    <script type="text/javascript" src="../js/markerwithlabel.js"></script>
+    <script type="text/javascript" src="../js/infobox.js"></script>
+    <script type="text/javascript" src="../cordova.js" ></script>
+    <script type="text/javascript" src="../js/phonegap_map.js" ></script>
+</head>
+<body>
+    <div id="Map">
+        <div id="Map_Container"></div>
+        <span class="more-listings"></span>
+    </div>
+    <div id="List"></div>
+    <div id="Sort">
+        <ul>
+            <li filtered_key="price" filtered_order="false" onclick="update_sort(this, 'price', false);" class="selected">Price: High to Low</li>
+            <li filtered_key="price" filtered_order="true" onclick="update_sort(this, 'price', true);">Price: Low to High</li>
+            <li filtered_key="modified" filtered_order="false" onclick="update_sort(this, 'modified', false);">Listings: Newest First</li>
+            <li filtered_key="modified" filtered_order="true" onclick="update_sort(this, 'modified', true);">Listings: Oldest First</li>
+            <li filtered_key="built" filtered_order="false" onclick="update_sort(this, 'built', false);">Age: Newest First</li>
+            <li filtered_key="built" filtered_order="true" onclick="update_sort(this, 'built', true);">Age: Oldest First</li>
+            <li filtered_key="distance" filtered_order="true" onclick="update_sort(this, 'distance', true);">Nearby</li>
+        </ul>
+    </div>
+    <div id="Search">
+        <div class="details-search">
+            <div id="Property-Type" class="section spaced">
+                <label onclick="display_property_types();">Property Type: <span>Any</span></label>
+                <div class="cui-options">
+                    <ul>
+                        <li cui-option="" onclick="select_property_type(this);">Any<span></span></li>
+                        <li cui-option="Residential" onclick="select_property_type(this);">Residential<span></span></li>
+                        <li cui-option="Multi-Family" onclick="select_property_type(this);">Multi-Family<span></span></li>
+                        <li cui-option="Land" onclick="select_property_type(this);">Lots and Land<span></span></li>
+                        <li cui-option="Commercial" onclick="select_property_type(this);">Commercial<span></span></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="Residential-Info">
+                <div id="Residential-Sub-Types" class="section static cui">
+                    <label onclick="display_overlay_options(this, true);">Residential Type: <span>Any</span></label>
+                    <div class="cui-overlay-options">
+                        <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
+                        <h3>Available Residential Types</h3>
+                        <ul>
+                            <li cui-option="Condo" onclick="select_cui_option(this);">Condo <span></span></li>
+                            <li cui-option="Condo-New Construction" onclick="select_cui_option(this);">Condo-New Construction<span></span></li>
+                            <li cui-option="Mobile/Modular" onclick="select_cui_option(this);">Mobile/Modular<span></span></li>
+                            <li cui-option="Prop Const" onclick="select_cui_option(this);">Prop Const<span></span></li>
+                            <li cui-option="Residential" onclick="select_cui_option(this);">Residential<span></span></li>
+                            <li cui-option="Residential-New Construction" onclick="select_cui_option(this);">Residential-New Construction<span></span></li>
+                            <li cui-option="Single Family Attached" onclick="select_cui_option(this);">Single Family Attached<span></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section spaced">
+                    <label>Beds: <span id="Bed-Range-Label"></span></label>
+                    <div class="range-wrap">
+                        <input type="hidden" id="min-beds" />
+                        <input type="hidden" id="max-beds" />
+                        <div id="Bed-Range">
+                            <label><span>1</span><i></i></label>
+                            <label><span>2</span><i></i></label>
+                            <label><span>3</span><i></i></label>
+                            <label><span>4</span><i></i></label>
+                            <label><span>5+</span><i></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <label>Baths: <span id="Bath-Range-Label"></span></label>
+                    <div class="range-wrap">
+                        <input type="hidden" id="min-baths" />
+                        <input type="hidden" id="max-baths" />
+                        <div id="Bath-Range">
+                            <label><span>1</span><i></i></label>
+                            <label><span>&nbsp;</span><i></i></label>
+                            <label><span>2</span><i></i></label>
+                            <label><span>&nbsp;</span><i></i></label>
+                            <label><span>3</span><i></i></label>
+                            <label><span>&nbsp;</span><i></i></label>
+                            <label><span>4</span><i></i></label>
+                            <label><span>&nbsp;</span><i></i></label>
+                            <label><span>5+</span><i></i></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="Multi-Family-Info">
+                <div id="Multi-Family-Sub-Types" class="section static cui">
+                    <label onclick="display_overlay_options(this, true);">Multi-Family Type: <span>Any</span></label>
+                    <div class="cui-overlay-options">
+                        <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
+                        <h3>Available Multi-Family Types</h3>
+                        <ul>
+                            <li cui-option="Multi-Family (2-4 Units) " onclick="select_cui_option(this);">Multi-Family (2-4 Units) <span></span></li>
+                            <li cui-option="Multi-Family (5+ Units) " onclick="select_cui_option(this);">Multi-Family (5+ Units) <span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="Land-Info">
+                <div id="#Land-Sub-Types" class="section static cui">
+                    <label onclick="display_overlay_options(this, true);">Lots and Land Type: <span>Any</span></label>
+                    <div class="cui-overlay-options">
+                        <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
+                        <h3>Available Lots and Land Types</h3>
+                        <ul>
+                            <li cui-option="Lots" onclick="select_cui_option(this);">Lots <span></span></li>
+                            <li cui-option="Acreage" onclick="select_cui_option(this);">Acreage <span></span></li>
+                            <li cui-option="Farm" onclick="select_cui_option(this);">Farm <span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="Commercial-Info">
+                <div id="Commercial-Sub-Types" class="section static cui">
+                    <label onclick="display_overlay_options(this, true);">Lots and Land Type: <span>Any</span></label>
+                    <div class="cui-overlay-options">
+                        <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
+                        <h3>Commercial Types</h3>
+                        <ul>
+                            <li cui-option="Commercial/Industrial" onclick="select_cui_option(this);">Commercial/Industrial <span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section spaced">
+                <label>Price: <span id="Price-Range-Label"></span></label>
+                <input type="hidden" id="min-price" />
+                <input type="hidden" id="max-price" />
+                <div class="range-wrap">
+                    <div id="Price-Range">
+                        <label><span>0</span><i></i></label>
+                        <label><span>100k</span><i></i></label>
+                        <label><span>200k</span><i></i></label>
+                        <label><span>350k</span><i></i></label>
+                        <label><span>500k</span><i></i></label>
+                        <label><span>750k</span><i></i></label>
+                        <label><span>1m</span><i></i></label>
+                        <label><span>2m</span><i></i></label>
+                        <label><span>3m+</span><i></i></label>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <label>Home Size: <span id="Home-Size-Range-Label"></span></label>
+                <div class="range-wrap">
+                    <input type="hidden" id="min-home-size" />
+                    <input type="hidden" id="max-home-size" />
+                    <div id="Home-Size-Range">
+                        <label><span>0</span><i></i></label>
+                        <label><span>1k</span><i></i></label>
+                        <label><span>2k</span><i></i></label>
+                        <label><span>3k</span><i></i></label>
+                        <label><span>4k+</span><i></i></label>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <label>Lot Size: <span id="Lot-Size-Range-Label"></span></label>
+                <div class="range-wrap">
+                    <input type="hidden" id="min-lot-size" />
+                    <input type="hidden" id="max-lot-size" />
+                    <div id="Lot-Size-Range">
+                        <label><span>0</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>1</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>5</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>10+</span><i></i></label>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <label>Age: <span id="Home-Age-Range-Label"></span></label>
+                <div class="range-wrap">
+                    <input type="hidden" id="min-home-age" />
+                    <input type="hidden" id="max-home-age" />
+                    <div id="Home-Age-Range">
+                        <label><span>0</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>2</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>6</span><i></i></label>
+                        <label><span>&nbsp;</span><i></i></label>
+                        <label><span>10+</span><i></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="MLS-Area" class="section static cui spaced"></div>
+            <div id="MLS-City" class="section static cui"></div>
+            <div id="MLS-School" class="section static cui"></div>
+
+            <span class="button" onclick="search_properties();">Search &raquo;</span>
+        </div>
+        <div class="mls-search">
+            <form id="MLS-Search-Form">
+                <label>MLS Number</label> 
+                <input type="number" id="mls-input" placeholder="mls#" />
+                <span class="button" onclick="load_property_by_search();">Search &raquo;</span>
+            </form>
+        </div>   
+    </div>
+    <div id="Loading"><img src="../res/images/icons/loadingiconwhitebg.gif" /></div>
+    <div id="Search-Navigation" class="map-navigation">
+        <div>
+            <div class="left-controls">
+                <span class="cancel" onclick="close_search();"><i></i>Cancel</span>
+            </div>
+            <div class="right-controls">
+                <span class="search"><i></i>Search</span>
+            </div>
+        </div>
+        <div class="subnav">
+            <div>
+                <label>Search by:</label><p><span class="mls" onclick="update_search_type('mls');">MLS#</span><span class="details active" onclick="update_search_type('details');">Property Details</span></p>
+            </div>
+        </div>
+    </div>
+    <div id="Map-Navigation" class="map-navigation">
+        <div>
+            <div class="left-controls">
+                <span class="map" onclick="display_map(true);"><i></i>Map</span>
+                <span class="list" onclick="display_map(false);"><i></i>List</span>
+            </div>
+            <div class="right-controls">
+                <span class="sort" onclick="display_sort();"><i></i>Sort</span>
+                <span class="find" onclick="display_search();"><i></i>Find</span>
+            </div>
+        </div>
+    </div>
+    <div id="Navigation">
+        <div>
+            <div class="search">
+                <a href="Map.html#Search" onclick="display_search(); return false;">
+                    <span></span>
+                    <i>Search</i>
+                </a>
+            </div>
+            <div class="nearby">
+                <a href="Map.html#Map|distance" onclick="update_sort($('#Sort ul li[filtered_key=distance][filtered_order=true]'), 'distance' , true); return false;">
+                    <span></span>
+                    <i>Nearby Homes</i>
+                </a>
+            </div>
+            <div class="openhouses">
+                <a href="OpenHouses.html">
+                    <span></span>
+                    <i>Open Houses</i>
+                </a>
+            </div>
+            <div class="resources">
+                <a href="Resources.html">
+                    <span></span>
+                    <i>Resources</i>
+                </a>
+            </div>
+            <div class="careers">
+                <a href="Careers.html">
+                    <span></span>
+                    <i>Careers</i>
+                </a>
+            </div>
+            <div class="contact">
+                <a href="ContactUs.html">
+                    <span></span>
+                    <i>Contact Us</i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="Property-Container">
+        <div id="Property-Navigation" class="map-navigation">
+            <div>
+                <div class="left-controls">
+                    <span class="back" onclick="unload_property();"><i></i>Back</span>
+                </div>
+                <div class="right-controls">
+                    <span class="directions"><i></i>Directions</span>
+                    <span class="save"><i></i>Save</span>
+                </div>
+            </div>
+        </div>
+        <div id="Property-Details">
+        </div>
+    </div>
+</body>
+</html>

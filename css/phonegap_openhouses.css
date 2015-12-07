@@ -1,0 +1,124 @@
+﻿#Properties {
+    display: none;
+    clear: both;
+    padding: 0px;
+}
+    #Properties > div{
+        float: left;
+        width: 50%;
+        padding: 5px;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        overflow: hidden;
+    }
+    #Properties div div{
+        position: relative;
+        padding-bottom: 90px;
+        background: #41636e;
+        overflow: hidden;
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,.5);
+        -webkit-box-shadow:0px 0px 5px 0px rgba(0,0,0,.5);
+        -moz-box-shadow:0px 0px 5px 0px rgba(0,0,0,.5);
+    }
+        #Properties div div p {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding-bottom: 75% !important;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+            #Properties div div p span {
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                float: right;
+                padding: 4px;
+                font-size: 12px;
+                color: #ffffff;
+                background: #41636e;
+                border-top-left-radius: 3px;
+            }
+        #Properties div div span.mls{
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            float: right;
+            padding: 4px;
+            font-size: 15px;
+            color: #41636e;
+            background: #ffffff;
+            background: rgba(255,255,255,.8);
+        }
+        #Properties div div span.price{
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            float: right;
+            padding: 4px;
+            font-size: 15px;
+            color: #41636e;
+            background: #ffffff;
+            background: rgba(255,255,255,.8);
+        }
+        #Properties div div span.address{
+            display: block;
+            position: absolute;
+            bottom: 50px;
+            left: 2px;
+            right: 2px;
+            height: 28px;
+            padding: 4px;
+            font-size: 12px;
+            line-height: 14px;
+            color: #ffffff;
+            text-align: center;
+        }
+        #Properties div div table {
+            position: absolute;
+            bottom: 3px;
+            width: 100%;
+            padding: 3px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+            #Properties div div table tr td {
+                font-size: 12px;
+                line-height: 12px;
+                color: #ffffff;
+            }
+                #Properties div div table tr td:last-child {
+                    text-align: right;
+                }
+#Loading{
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background:rgba(255,255,255,.8);
+}
+    #Loading img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -32px;
+        margin-left: -32px;
+    }
+
+@media(max-width:480px) {
+    #Properties > div{
+        float: none;
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        overflow: hidden;
+    }
+}
