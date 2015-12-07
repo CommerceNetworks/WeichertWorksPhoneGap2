@@ -24,6 +24,10 @@
   <!-- ios and android bounce -->
   <preference name="webviewbounce" value="false" />
   
+  <gap:plugin name="org.apache.cordova.geolocation" />
+  
+  <access origin="*" />
+  
   
   
 
