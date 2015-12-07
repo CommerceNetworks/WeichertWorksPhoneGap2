@@ -73,12 +73,12 @@ $(document).ready(function () {
 var loc_latlng = null;
 var earth_radius = 6371;
 function get_current_position() {
-    alert('get_current_position');
+/*    alert('get_current_position');
     try {
         navigator.geolocation.getCurrentPosition(current_position_success, current_position_error);
     } catch (err) {
         alert('navigator current location :' + err);
-    }
+    }*/initiate_map();
 }
 function current_position_success(position) {
     alert('current_position_success');
