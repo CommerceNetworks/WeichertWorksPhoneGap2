@@ -74,18 +74,10 @@ var loc_latlng = null;
 var current_marker = null;
 var earth_radius = 6371;
 function get_current_position() {
-<<<<<<< HEAD
     try {
         navigator.geolocation.getCurrentPosition(current_position_success, current_position_error);
     } catch (err) {
         current_position_error(err);
-=======
-    alert('get_current_position');
-    try {
-        navigator.geolocation.getCurrentPosition(current_position_success, current_position_error);
-    } catch (err) {
-        alert('navigator current location :' + err);
->>>>>>> origin/master
     }
 }
 function current_position_success(position) {
