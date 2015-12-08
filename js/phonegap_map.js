@@ -790,6 +790,7 @@ function update_property_objects_for_nearby() {
 }
 function current_position_update_success(position) {
     loc_latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    alert(position.coords.latitude + ', ' + position.coords.longitude);
     update_property_objects_distance();
 }
 function current_position_update_error(error) {
@@ -1685,18 +1686,15 @@ function progress_image(progress) {
     var margin = -$display_image.outerWidth() * current_image;
     $('#Property-Photos table').stop().animate({ marginLeft: margin }, 200);
     update_image_counter();
+    hide_swipe_message();
 }
 function update_image_counter() {
     $('#Property-Photos span').html((current_image + 1) + ' of ' + $prop_tds.length);
 }
-function open_property_image(obj){
-	//var $iframe = $('<iframe></iframe>');
-	//var $p = $(obj);
-	//var background = $p.attr('ref');
-	//alert(background);
-	//$iframe.attr('src', background);
-	//$iframe.css({position:'absolute', zIndex:1400, top:'0px', bottom:'0px', left:'0px', right:'0px', width: '100%', height: '100%'});
-	//$('body').append($iframe);
+function open_property_image() {
+    var mls = $('#Property-Photos').attr('mls');
+
+    window.open('Image.html#' + mls + '|' + current_image);
 }
 
 
@@ -1731,7 +1729,7 @@ function parse_property_xml($property_xml) {
             type = parseInt($property.find("type").text());
 
         load_property_glance_details($property);
-        load_property_images($property);
+        load_property_images($property, $property.find("mls").text());
         load_property_agents($property);
         load_property_summary($property);
         load_property_open_house($property)
@@ -1748,6 +1746,10 @@ function parse_property_xml($property_xml) {
     }
 
     $('#Loading').hide();
+
+    $('#Swipe_Message').fadeIn();
+    display_swipe_message();
+    setTimeout('hide_swipe_message();', 2000);
 }
 function set_property_directions_link($property) {
     $('#Property-Navigation div.right-controls').show();
@@ -1852,21 +1854,33 @@ function load_property_glance_details($property) {
     var $glance = $(glance_content);
     $("#Property-Details").append($glance);
 }
-function load_property_images($property) {
+function load_property_images($property, mls) {
     var $images = $property.find("image");
     if ($images.length > 0) {
-        var images_content = '<div id="Property-Photos"><table><tr>';
+        var images_content = '<div id="Property-Photos" mls="' + mls + '"><table><tr>';
         for (var image = 0; image < $images.length; image++) {
             var $image = $images.eq(image);
-            images_content += '<td><p ref="' + $image.text() + '" onclick="open_property_image(this);" style="background-image: url(' + $image.text() + ');"></p></td>';
+            images_content += '<td><p ref="' + $image.text() + '" style="background-image: url(' + $image.text() + ');"></p></td>';
         }
-        images_content += '</tr></table><span></span></div>';
+        images_content += '</tr></table><span></span><div id="Swipe_Message"></div></div>';
         var $images_content = $(images_content);
         $("#Property-Details").append($images_content);
-
-        $("#Property-Photos").swipe({ fingers: 'all', swipeLeft: progress_image_left, swipeRight: progress_image_right, allowPageScroll: "vertical" });
+        $("#Property-Photos p").swipe({ fingers: 'all', swipeLeft: progress_image_left, swipeRight: progress_image_right, allowPageScroll: "vertical" });
+        $("#Property-Photos").swipe({ tap: open_property_image });
         size_property_photos();
     }
+}
+function display_swipe_message() {
+    $('#Swipe_Message').animate({ marginLeft: 0 }, function () {
+        $('#Swipe_Message').animate({ marginLeft: -30 }, function () {
+            display_swipe_message();
+        });
+    });
+}
+function hide_swipe_message() {
+    $('#Swipe_Message').stop().fadeOut(function () {
+        $(this).remove();
+    });
 }
 function load_property_agents($property) {
     var $agents = $property.find("agent");

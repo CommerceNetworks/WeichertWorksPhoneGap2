@@ -425,6 +425,21 @@ div.map-navigation{
                     background:#ffcc00;
                     color:#000000;
                 }
+    #Property-Container #Property-Photos #Swipe_Message {
+        display: none;
+        z-index: 20;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -20px 0px 0px -20px;
+        width: 40px;
+        height: 40px;
+        background-image: url(../res/images/icons/icon_swipe.png);
+        background-size: 40px 40px;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
 
     #Property-Container #Property-Details div.agent{
         padding: 10px;
