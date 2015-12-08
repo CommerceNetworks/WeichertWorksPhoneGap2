@@ -790,7 +790,6 @@ function update_property_objects_for_nearby() {
 }
 function current_position_update_success(position) {
     loc_latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    alert(position.coords.latitude + ', ' + position.coords.longitude);
     update_property_objects_distance();
 }
 function current_position_update_error(error) {
