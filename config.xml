@@ -25,6 +25,7 @@
   <preference name="webviewbounce" value="false" />
   
   <gap:plugin name="org.apache.cordova.geolocation" />
+  <gap:plugin name="org.apache.cordova.inappbrowser" />
   
   <access origin="*" />
 
