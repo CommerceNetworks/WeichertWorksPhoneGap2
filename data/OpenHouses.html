@@ -10,15 +10,11 @@
     <link href="../css/phonegap_master.css" rel="Stylesheet" type="text/css" />
     <link href="../css/phonegap_openhouses.css" rel="Stylesheet" type="text/css" />
     <script src="../js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.touchSwipe.min.js"></script>
     <script src="../js/phonegap_openhouses.js"></script>
 </head>
 <body>
-    <div id="ContentWrap">
-        <div id="Content">
-            <h1>Upcoming Open Houses</h1>
-            <div id="Properties">
-            </div>
-        </div>
+    <div id="List">  
     </div>
     <!--update path-->
     <div id="Loading"><img src="../res/images/icons/loadingiconwhitebg.gif" /></div>
@@ -60,6 +56,24 @@
                     <i>Contact Us</i>
                 </a>
             </div>
+        </div>
+    </div>
+    <div id="Header">
+        <h1>Upcoming Open Houses</h1>
+    </div>
+    <div id="Property-Container">
+        <div id="Property-Navigation" class="map-navigation">
+            <div>
+                <div class="left-controls">
+                    <span class="back" onclick="unload_property();"><i></i>Back</span>
+                </div>
+                <div class="right-controls">
+                    <span class="directions"><i></i>Directions</span>
+                    <span class="save"><i></i>Save</span>
+                </div>
+            </div>
+        </div>
+        <div id="Property-Details">
         </div>
     </div>
 </body>

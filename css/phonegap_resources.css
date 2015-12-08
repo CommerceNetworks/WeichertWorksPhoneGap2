@@ -20,18 +20,23 @@
     width:100%;
     border-top:1px solid #41636e;
     border-bottom:1px solid #41636e;
+    background:#fff;
     margin:20px 0px 20px 0px;
     overflow:hidden;
 }
     #Content #Items div {
-        display:none;
         margin: 0px;
-        padding: 10px 0px 10px 0px;
+        padding: 10px;
         overflow: hidden;
     }
         #Content #Items div a {
+            display: block;
+            max-width:100%;
             font-size: 13px;
             line-height: 20px;
+            white-space: nowrap;
+            text-overflow:ellipsis;
+            overflow: hidden;
         }
 #Loading{
     z-index: 1000;

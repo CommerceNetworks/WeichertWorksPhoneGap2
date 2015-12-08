@@ -27,10 +27,18 @@
   <gap:plugin name="org.apache.cordova.geolocation" />
   
   <access origin="*" />
-  
-  
-  
 
+  <!-- iOS-->
+  <feature name="InAppBrowser">
+    <param name="android-package" value="org.apache.cordova.InAppBrowser" />
+  </feature>
+  <!-- Android-->
+  <feature name="InAppBrowser">
+    <param name="ios-package" value="CDVInAppBrowser" />
+  </feature>
+  <!-- Windows Phone 7 and 8-->
+  <feature name="InAppBrowser" />
+  
   <!-- Icons -->
   <!-- iPhone 6 / 6+ ios 7.0+ -->
   <icon src="res/icon/icon-60@3x.png" platform="ios" width="180" height="180" />

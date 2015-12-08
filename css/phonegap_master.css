@@ -11,11 +11,33 @@ body{
     -webkit-text-size-adjust: none;
 }
 
+#Header{
+	position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 30px;
+    padding-top:20px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+}
+    #Header h1 {
+        font-size: 18px;
+        line-height: 30px;
+        color: #41636e;
+        text-align: center;
+    }
+
 #ContentWrap {                 
-    position:relative; 
-    margin: 0px 20px 60px 20px;
-    background:#ffffff;
-    overflow:hidden;
+    position: absolute;
+    left:0px;
+    top:50px;
+    bottom:40px;
+    width:100%;
+    background:#ccc;
+    overflow:auto;
 }
     #ContentWrap #Content {
         position: relative;
@@ -97,40 +119,9 @@ body{
                 padding: 8px 5px 8px 5px;
                 font-size: 13px;
             }
-
-@media screen and (min-width:1240px) {
-    #ContentWrap {
-        width: 1200px;
-        margin: 0px auto 60px auto;
-    }
-}
-@media(max-width:640px){
-    #Content h1 {
-        font-size:1.5em;
-    }
-    #Content h2 {
-        font-size:1.25em;
-    }
-    #Content h3 {
-        font-size:1.1em;
-    }
-}
-@media(max-width:480px) {
-    #Header {
-        margin-bottom: 0px;
-    }
-    #ContentWrap {
-        margin: 0px 0px 60px 0px;
-    }
-    #Content img.left {
-        float: none;
-        max-width: 100%;
-        padding: 0px 0px 20px 0px;
-    }
-    #Content img{
-        max-width: 100%;
-    }
-}
+        #ContentWrap #Content img {
+            max-width: 100%;
+        }
 
 #Navigation{
     z-index: 1010;

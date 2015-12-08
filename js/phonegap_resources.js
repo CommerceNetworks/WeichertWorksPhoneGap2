@@ -56,7 +56,7 @@ function parse_item_numbers($numbers, $category) {
         var $number = $numbers.eq(number);
         var number_type = $number.find("category-item-number-type").text();
         var number_link = $number.find("category-item-number-link").text();
-        $category.append('<a href="tel:' + number_link + '" >' + number_type + ': ' + number_link + '</a><br />');
+        $category.append('<a href="tel:' + number_link + '" >' + number_type + ': ' + number_link + '</a>');
     }
 }
 function parse_item_links($links, $category) {
@@ -65,7 +65,7 @@ function parse_item_links($links, $category) {
         var link_type = $link.find("category-item-link-type").text();
         var link_link = $link.find("category-item-link-link").text();
         if (link_type == "link")
-            $category.append('<a href="' + link_link + '" target="_blank">' + link_link + '</a><br />');
+            $category.append('<a href="' + link_link + '" target="_blank" onclick="window.open(\'' + link_link + '\', \'_system\'); return false;">' + link_link + '</a>');
         else
             $category.append('<a href="mailto:' + link_link + '">' + link_link + '</a><br />');
     }
@@ -75,7 +75,7 @@ function parse_item_socials($socials, $category) {
         var $link = $socials.eq(link);
         var link_type = $link.find("category-item-social-type").text();
         var link_link = $link.find("category-item-social-link").text();
-        $category.append('<a href="' + link_link + '" target="_blank">' + link_link + '</a><br />');
+        $category.append('<a href="' + link_link + '" target="_blank">' + link_link + '</a>');
     }
 }
 

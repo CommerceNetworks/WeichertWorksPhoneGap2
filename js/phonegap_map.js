@@ -71,23 +71,21 @@ $(document).ready(function () {
 /*                                          */
 /*------------------------------------------*/
 var loc_latlng = null;
+var current_marker = null;
 var earth_radius = 6371;
 function get_current_position() {
-/*    alert('get_current_position');
     try {
         navigator.geolocation.getCurrentPosition(current_position_success, current_position_error);
     } catch (err) {
-        alert('navigator current location :' + err);
-    }*/initiate_map();
+        current_position_error(err);
+    }
 }
 function current_position_success(position) {
-    alert('current_position_success');
     try {
         loc_latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     } catch (err) {
-        alert('current location google conversion :' + err);
+        current_position_error(err);
     }
-    alert('initiate_map');
     initiate_map();
 }
 function current_position_error(error) {
@@ -95,19 +93,37 @@ function current_position_error(error) {
     loc_latlng = new google.maps.LatLng(32.627, -85.431);
     initiate_map();
 }
+function add_current_location_marker() {
+    current_marker = new MarkerWithLabel({
+        position: loc_latlng,
+        draggable: false,
+        raiseOnDrag: false,
+        icon: "../res/images/icons/transparent.png",
+        labelContent: '',
+        labelAnchor: new google.maps.Point(10,  15),
+        labelClass: "here-label",
+        isClicked: false,
+        map: map,
+        title: 'You Are Here',
+        zIndex: google.maps.Marker.MAX_ZINDEX,
+        labelZIndex: 2000
+    });
+}
 // nearby functions (haversine formula)
 function calculate_property_distance(prop_latlng) {
-    var dist_lat = convert_degrees_to_radians(prop_latlng.lat() - loc_latlng.lat());
-    var dist_lng = convert_degrees_to_radians(prop_latlng.lng() - loc_latlng.lng());
+    if (prop_latlng != null) {
+        var dist_lat = convert_degrees_to_radians(prop_latlng.lat() - loc_latlng.lat());
+        var dist_lng = convert_degrees_to_radians(prop_latlng.lng() - loc_latlng.lng());
 
-    var a = Math.sin(dist_lat / 2) * Math.sin(dist_lat / 2) +
-        Math.cos(convert_degrees_to_radians(loc_latlng.lat())) * Math.cos(convert_degrees_to_radians(prop_latlng.lat())) *
-        Math.sin(dist_lng / 2) * Math.sin(dist_lng / 2);
+        var a = Math.sin(dist_lat / 2) * Math.sin(dist_lat / 2) +
+            Math.cos(convert_degrees_to_radians(loc_latlng.lat())) * Math.cos(convert_degrees_to_radians(prop_latlng.lat())) *
+            Math.sin(dist_lng / 2) * Math.sin(dist_lng / 2);
 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    var distance = earth_radius * c;
-    return distance;
+        var distance = earth_radius * c;
+        return distance;
+    }
 
 }
 function convert_degrees_to_radians(degrees) {
@@ -204,6 +220,7 @@ function set_defaults() {
             filtered_key = 'Nearby';
             filtered_asc = true;
             set_default_sort(filtered_key, filtered_asc);
+            add_current_location_marker();
         }
         add_initial_markers_to_map(displayed_count);
     } else
@@ -324,7 +341,7 @@ function add_marker(property_object, property) {
                 position: property_object.latlng,
                 draggable: false,
                 raiseOnDrag: false,
-                icon: "images/icons/transparent.png",
+                icon: "../res/images/icons/transparent.png",
                 labelContent: '<div class="inner">$' + property_object.label_price + '</div><div class="arrow"></div>',
                 labelAnchor: new google.maps.Point(26, 23),
                 labelClass: "map-label",
@@ -647,7 +664,7 @@ function create_list_content(property_object) {
                 '</table>' +
                 '<span class="address">' + property_object.address + '</span>' +
                 //(property_object.distance != null ? '<span class="address">' + property_object.distance + ' (' + property_object.latitude + ', ' + property_object.longitude + ')</span>' : '') +
-                ('<span class="address"> (' + property_object.latitude + ', ' + property_object.longitude + ')</span>') +
+                //('<span class="address"> (' + property_object.latitude + ', ' + property_object.longitude + ')</span>') +
         '</div>' +
         '</div>';
 
@@ -728,9 +745,13 @@ function update_sort(obj, key, ascending) {
     $('#Sort').removeClass('active_panel');
     $('#Sort li').removeClass('selected');
 
+    $('#Search').removeClass('active_panel');
+    $('#Search-Navigation').hide();
+
     if (active_panel == 'Sort')
         active_panel = "Map";
     $('#' + active_panel).addClass('active_panel');
+
     $(obj).addClass('selected');
 
     if (key == "distance") {
@@ -1714,6 +1735,7 @@ function parse_property_xml($property_xml) {
         load_property_images($property);
         load_property_agents($property);
         load_property_summary($property);
+        load_property_open_house($property)
         load_property_details($property, type);
         load_property_neighborhood($property);
         load_property_disclaimer($property);
@@ -1861,7 +1883,7 @@ function load_property_agents($property) {
                 content += '<img src="' + $agent.find("agent_image").text() + '" />';
 
             content += '<div>';
-            content += '<p class="agentName">' + $agent.find("agent_first_name").text() + ' ' + $agent.find("agent_first_name").text() + ' ' +
+            content += '<p class="agentName">' + $agent.find("agent_first_name").text() + ' ' + $agent.find("agent_last_name").text() + ' ' +
                 ($agent.find("agent_title").text().length > 0 ? '(' + $agent.find("agent_title").text() + ')' : '') + '</a></p>';
             content += '<p><span>DRE #: </span>' + $agent.find("agent_dre").text() + '</p>';
 
@@ -1899,6 +1921,25 @@ function load_property_summary($property) {
 
     var $summary = $(summary);
     $("#Property-Details").append($summary);
+}
+function load_property_open_house($property) {
+    var $open_houses = $property.find("open_house_date");
+    if ($open_houses.length > 0) {
+
+        var dates = '<div class="property-open-houses">';
+        dates += '<h3>Upcoming Open Houses</h3>';
+        dates += '<table>';
+
+        for (var open_house = 0; open_house < $open_houses.length; open_house++) {
+            $open_house_date = $open_houses.eq(open_house);
+            dates += '<tr><td>' + $open_house_date.find('date').text() + '</td><td>' + $open_house_date.find('start_time').text() + ' - ' + $open_house_date.find('end_time').text() + '</td></tr>';
+        }
+
+        dates += '</table>';
+        dates += '</div>';
+        var $dates = $(dates);
+        $("#Property-Details").append($dates);
+    }
 }
 function load_property_details($property, type) {
     var $details = $('<div class="details-panels"></div>');
