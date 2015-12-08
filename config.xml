@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
 <widget xmlns = "http://www.w3.org/ns/widgets"
-   xmlns:gap = "http://phonegap.com/ns/1.0" id = "com.commercenetworks.weichertworks" version = "1.0">
+   xmlns:gap = "http://apache.org/cordova/ns/plugins/1.0" id = "com.commercenetworks.weichertworks" version = "1.0">
 
   <name>Weichert Works</name>
 
@@ -31,14 +31,16 @@
 
   <!-- iOS-->
   <feature name="InAppBrowser">
-    <param name="android-package" value="org.apache.cordova.InAppBrowser" />
+    <param name="ios-package" value="CDVInAppBrowser" /> 
   </feature>
   <!-- Android-->
-  <feature name="InAppBrowser">
-    <param name="ios-package" value="CDVInAppBrowser" />
+  <feature name="InAppBrowser"> 
+    <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
   </feature>
   <!-- Windows Phone 7 and 8-->
-  <feature name="InAppBrowser" />
+  <feature name="InAppBrowser">
+    <param name="wp-package" value="InAppBrowser"/>
+  </feature>
   
   <!-- Icons -->
   <!-- iPhone 6 / 6+ ios 7.0+ -->
