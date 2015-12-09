@@ -4,8 +4,6 @@ function retrieve_resources_xml() {
     $.ajax({
         url: ajaxUrl,
         beforeSend: function (xhr) {
-            //$("#LoadingText").html("Searching Properties");
-            //ADV_addLoadingGif();
             xhr.overrideMimeType("text/plain; charset=x-user-defined");
         }
     }).done(function (data) {
@@ -65,7 +63,7 @@ function parse_item_links($links, $category) {
         var link_type = $link.find("category-item-link-type").text();
         var link_link = $link.find("category-item-link-link").text();
         if (link_type == "link")
-            $category.append('<a href="#" onclick="cordova.InAppBrowser.open(\'' + link_link + '\', \'_system\', \'location=no\');">' + link_link + '</a>');
+            $category.append('<a href="' + link_link + '" target="_blank" onclick="window.open(\'' + link_link + '\', \'_system\'); return false;">' + link_link + '</a>');
         else
             $category.append('<a href="mailto:' + link_link + '">' + link_link + '</a><br />');
     }
@@ -75,7 +73,7 @@ function parse_item_socials($socials, $category) {
         var $link = $socials.eq(link);
         var link_type = $link.find("category-item-social-type").text();
         var link_link = $link.find("category-item-social-link").text();
-        $category.append('<a href="#" onclick="cordova.InAppBrowser.open(\'' + link_link + '\', \'_system\', \'location=no\');">' + link_link + '</a>');
+        $category.append('<a href="' + link_link + '" target="_blank">' + link_link + '</a>');
     }
 }
 

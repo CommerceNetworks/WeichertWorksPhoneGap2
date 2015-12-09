@@ -73,8 +73,10 @@
                         <div id="RelocationForm">
                             <div>
                                 <label for="agent1" id="lblAgent" class="inline-label">Are you currently working with an agent?</label>
-                                <label for="agent1"><input type="radio" id="agent1" name="agent" value="yes" />Yes</label>
-                                <label for="agent2"><input type="radio" id="agent2" name="agent" value="no" />No</label>
+                                <div class="radios">
+                                    <label for="agent1"><input type="radio" id="agent1" name="agent" value="yes" />Yes</label>
+                                    <label for="agent2"><input type="radio" id="agent2" name="agent" value="no" />No</label>
+                                </div>
                             </div>
                             <div>
                                 <label for="cbInterests" id="lblInterests" class="full-label">What kind of information are you interested in?</label>
@@ -89,8 +91,10 @@
                             </div>
                             <div>
                                 <label for="moving1" id="lblMoving" class="inline-label">Are you planning on moving to this area?</label>
-                                <label for="moving1"><input type="radio" id="moving1" name="moving" value="yes" />Yes</label>
-                                <label for="moving2"><input type="radio" id="moving2" name="moving" value="no" />No</label>
+                                <div class="radios">
+                                    <label for="moving1"><input type="radio" id="moving1" name="moving" value="yes" />Yes</label>
+                                    <label for="moving2"><input type="radio" id="moving2" name="moving" value="no" />No</label>
+                                </div>
                             </div>
                             <div id="RelocationNeighborhoods">
                                 <label for="tbInterestedNeighborhoods" class="full-label">What cities or neighborhoods are you interested in?</label>
@@ -102,13 +106,17 @@
                             </div>
                             <div>
                                 <label for="buyrent1" id="lblBuyRent" class="inline-label">Are you looking to buy or rent?</label>
-                                <label for="buyrent1"><input type="radio" id="buyrent1" name="buyrent" value="buy" />Buy</label>
-                                <label for="buyrent2"><input type="radio" id="buyrent2" name="buyrent" value="rent" />Rent</label>
+                                <div class="radios">
+                                    <label for="buyrent1"><input type="radio" id="buyrent1" name="buyrent" value="buy" />Buy</label>
+                                    <label for="buyrent2"><input type="radio" id="buyrent2" name="buyrent" value="rent" />Rent</label>
+                                </div>
                             </div>
                             <div>
                                 <label for="homebuyer1" id="lblFirstTime" class="inline-label">Are you a first-time homebuyer?</label>
-                                <label for="homebuyer1"><input type="radio" id="homebuyer1" name="homebuyer" value="yes" />Yes</label>
-                                <label for="homebuyer2"><input type="radio" id="homebuyer2" name="homebuyer" value="no" />No</label>
+                                <div class="radios">
+                                    <label for="homebuyer1"><input type="radio" id="homebuyer1" name="homebuyer" value="yes" />Yes</label>
+                                    <label for="homebuyer2"><input type="radio" id="homebuyer2" name="homebuyer" value="no" />No</label>
+                                </div>
                             </div>
                             <div>
                                 <label for="tbNumberPeople" id="lblNumberPeople" class="inline-label left">How many people live in your home?</label>
@@ -145,10 +153,10 @@
                             </div>
                         </div>
                     </div>
-                    <div id="ContactForm-Success">
-                        <p id="SentMSG">Your contact request was successfully sent!  Please give our agents time to respond to your comments.</p>
-                    </div>
                 </form>
+            </div>
+            <div id="Contact_Success">
+                <p>Your contact request was successfully sent!  Please give our agents time to respond to your comments.</p>
             </div>
             <div id="ContactInformation">
                 <div id="MapWrap">

@@ -1,129 +1,4 @@
-﻿/*#Properties {
-    display: none;
-    clear: both;
-    padding: 0px;
-}
-    #Properties > div{
-        float: left;
-        width: 50%;
-        padding: 5px;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        overflow: hidden;
-    }
-    #Properties div div{
-        position: relative;
-        padding-bottom: 90px;
-        background: #41636e;
-        overflow: hidden;
-        box-shadow: 0px 0px 5px 0px rgba(0,0,0,.5);
-        -webkit-box-shadow:0px 0px 5px 0px rgba(0,0,0,.5);
-        -moz-box-shadow:0px 0px 5px 0px rgba(0,0,0,.5);
-    }
-        #Properties div div p {
-            position: relative;
-            display: block;
-            width: 100%;
-            padding-bottom: 75% !important;
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            overflow: hidden;
-        }
-            #Properties div div p span {
-                position: absolute;
-                bottom: 0px;
-                right: 0px;
-                float: right;
-                padding: 4px;
-                font-size: 12px;
-                color: #ffffff;
-                background: #41636e;
-                border-top-left-radius: 3px;
-            }
-        #Properties div div span.mls{
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            float: right;
-            padding: 4px;
-            font-size: 15px;
-            color: #41636e;
-            background: #ffffff;
-            background: rgba(255,255,255,.8);
-        }
-        #Properties div div span.price{
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            float: right;
-            padding: 4px;
-            font-size: 15px;
-            color: #41636e;
-            background: #ffffff;
-            background: rgba(255,255,255,.8);
-        }
-        #Properties div div span.address{
-            display: block;
-            position: absolute;
-            bottom: 50px;
-            left: 2px;
-            right: 2px;
-            height: 28px;
-            padding: 4px;
-            font-size: 12px;
-            line-height: 14px;
-            color: #ffffff;
-            text-align: center;
-        }
-        #Properties div div table {
-            position: absolute;
-            bottom: 3px;
-            width: 100%;
-            padding: 3px;
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-        }
-            #Properties div div table tr td {
-                font-size: 12px;
-                line-height: 12px;
-                color: #ffffff;
-            }
-                #Properties div div table tr td:last-child {
-                    text-align: right;
-                }
-#Loading{
-    z-index: 1000;
-    position: fixed;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    background:rgba(255,255,255,.8);
-}
-    #Loading img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -32px;
-        margin-left: -32px;
-    }
-
-@media(max-width:480px) {
-    #Properties > div{
-        float: none;
-        width: 100%;
-        padding: 5px;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        overflow: hidden;
-    }
-}*/
-
-#Loading {
+﻿#Loading {
     z-index: 1002;
     position: fixed;
     top: 0px;
@@ -440,7 +315,6 @@ div.map-navigation{
         background-position: center center;
     }
 
-
     #Property-Container #Property-Details div.agent{
         padding: 10px;
         margin-bottom: 10px;
@@ -526,68 +400,210 @@ div.map-navigation{
                 text-align:right;
             }
 
-        #Property-Container #Property-Details div.details-panels {
-            padding: 0px 0px 10px 0px;
-            overflow: hidden;
+    #Property-Container #Property-Details div.details-panels {
+        padding: 0px 0px 10px 0px;
+        overflow: hidden;
+    }
+        #Property-Container #Property-Details div.details-panels div {
+            margin-bottom: 0px;
         }
-            #Property-Container #Property-Details div.details-panels div {
-                margin-bottom: 0px;
+            #Property-Container #Property-Details div.details-panels div h3 {
+                padding: 0px 6px 0px 6px;
+                font-size: 14px;
+                line-height: 26px;
+                font-weight: normal;
+                background: #231f20;
+                color: #ffffff;
             }
-                #Property-Container #Property-Details div.details-panels div h3 {
-                    padding: 0px 6px 0px 6px;
-                    font-size: 14px;
-                    line-height: 26px;
-                    font-weight: normal;
-                    background: #231f20;
-                    color: #ffffff;
+            #Property-Container #Property-Details div.details-panels div table {
+                width: 100%;
+                background: #efefef;
+            }
+                #Property-Container #Property-Details div.details-panels div table td {
+                    padding: 5px;
+                    font-size: 12px;
+                    color: #2b4e5a;
+                    border-top: solid 1px #cccccc;
                 }
-                #Property-Container #Property-Details div.details-panels div table {
-                    width: 100%;
-                    background: #efefef;
+                #Property-Container #Property-Details div.details-panels div table tr:nth-child(1) td {
+                    border-top: 0px;
                 }
-                    #Property-Container #Property-Details div.details-panels div table td {
-                        padding: 5px;
-                        font-size: 12px;
-                        color: #2b4e5a;
-                        border-top: solid 1px #cccccc;
-                    }
-                    #Property-Container #Property-Details div.details-panels div table tr:nth-child(1) td {
-                        border-top: 0px;
-                    }
-                    #Property-Container #Property-Details div.details-panels div table td:nth-child(1) {
-                        width: 80px;
-                    }
+                #Property-Container #Property-Details div.details-panels div table td:nth-child(1) {
+                    width: 80px;
+                }
                 
-        #Property-Container #Property-Details div.neighborhood {
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: #2b4e5a;
-            background: #efefef;
-            overflow: hidden;
+    #Property-Container #Property-Details div.neighborhood {
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: #2b4e5a;
+        background: #efefef;
+        overflow: hidden;
+    }
+        #Property-Container #Property-Details div.neighborhood h3 {
+                padding: 0px 6px 0px 6px;
+                font-size: 14px;
+                line-height: 26px;
+                font-weight: normal;
+                background: #231f20;
+                color: #ffffff;
         }
-            #Property-Container #Property-Details div.neighborhood h3 {
-                    padding: 0px 6px 0px 6px;
-                    font-size: 14px;
-                    line-height: 26px;
-                    font-weight: normal;
-                    background: #231f20;
-                    color: #ffffff;
-            }
-            #Property-Container #Property-Details div.neighborhood img{
-                max-width: 100%;
-            }
-            #Property-Container #Property-Details div.neighborhood p{
-            padding: 10px;
-            font-size: 12px;
-            line-height: 18px;
-            font-weight: normal;
-            background: #efefef;
-            color: #2b4e5a;
+        #Property-Container #Property-Details div.neighborhood img{
+            max-width: 100%;
+        }
+        #Property-Container #Property-Details div.neighborhood p{
+        padding: 10px;
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: normal;
+        background: #efefef;
+        color: #2b4e5a;
+    }
+
+    #Property-Container #Property-Details div.property-map{
+        display: block;
+        padding: 0px 0px 10px 0px;
+        overflow: hidden;
+    }
+        #Property-Container #Property-Details div.property-map h3 {
+                padding: 0px 6px 0px 6px;
+                height: 26px;
+                font-size: 14px;
+                line-height: 26px;
+                font-weight: normal;
+                background: #231f20;
+                color: #ffffff;
+        }
+        #Property-Container #Property-Details div.property-map #Property-Map{
+            height: 140px;
+            width: 100%;
         }
 
-        #Property-Container #Property-Details div.disclaimer {
-            clear: both;
-            padding: 10px;
-            font-size: 12px;
-            color: #666666;
+    #Property-Container #Property-Details div.disclaimer {
+        clear: both;
+        padding: 10px;
+        font-size: 12px;
+        color: #666666;
+    }
+
+    #Property-Container #Property-Images-Display {
+        display: none;        
+        z-index: 1100;
+        position: absolute;
+        top: 50px;
+        left: 0px;
+        bottom: 40px;
+        right: 0px;
+        padding: 10px;
+        background:#ccc;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        overflow: auto;
+    }
+        #Property-Container #Property-Images-Display #Zoom_Message {
+            display: none;
+            z-index: 1101;
+            position: fixed;
+            left: 50%;
+            top: 100px;
+            margin: -20px 0px 0px -20px;
+            width: 40px;
+            height: 40px;
+            background-image: url(../res/images/icons/icon_zoom.png);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center center;
         }
+        #Property-Container #Property-Images-Display img {
+            display: none;
+            width: 100%;
+        }
+    #Property-Container #Property-Images-Tiles {
+        display: none;
+        z-index: 1100;
+        position: absolute;
+        top: 50px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        padding:10px 10px 0px 0px;
+        background:#ccc;
+        overflow: auto;
+    }
+        #Property-Container #Property-Images-Tiles > div {
+            float: left;
+            width: 50%;
+            padding:0px 0px 10px 10px; 
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            overflow: hidden;
+        }
+        #Property-Container #Property-Images-Tiles div div{
+            padding-bottom:100%;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+    #Property-Container #Property-Images-Navigation {
+        display: none;
+        z-index: 1110;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        background: #fff;
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
+        overflow: hidden;
+    }
+        #Property-Container #Property-Images-Navigation div {
+            padding-top: 20px;
+            height: 30px;
+            line-height: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #41636e;
+            cursor: pointer;
+        }
+            #Property-Container #Property-Images-Navigation div i {
+                width: 16px;
+                height: 30px;
+                background-position: center center;
+                background-size: 16px 16px;
+                background-repeat: no-repeat;
+            }
+            #Property-Container #Property-Images-Navigation div.prev {
+                float: left;
+                margin-right: 8px;
+                margin-left: 8px;
+            }
+                #Property-Container #Property-Images-Navigation div.prev i {
+                    float: left;
+                    background-image: url(../res/images/icons/icon_back.png);
+                }
+            #Property-Container #Property-Images-Navigation div.next {
+                float: left;
+            }
+                #Property-Container #Property-Images-Navigation div.next i {
+                    float: right;
+                    background-image: url(../res/images/icons/icon_go.png);
+                }
+            #Property-Container #Property-Images-Navigation div.close {
+                float: right;
+                margin-right: 8px;
+            }
+                #Property-Container #Property-Images-Navigation div.close i {
+                    float: right;
+                    background-image: url(../res/images/icons/icon_delete.png);
+                }
+            #Property-Container #Property-Images-Navigation div.list {
+                float: right;
+                margin-right: 8px;
+            }
+                #Property-Container #Property-Images-Navigation div.list i {
+                    float: right;
+                    background-image: url(../res/images/icons/icon_list.png);
+                }

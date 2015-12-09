@@ -1,16 +1,47 @@
 ﻿function submit() {
-    validate_form();
-    var query = "";
-    query += "?FirstName=" + $('#tbFirstName').val();
-    query += "&LastName=" + $('#tbLastName').val();
-    query += "&Email=" + $('#tbEmail').val();
-    query += "&Phone=" + $('#tbPhone').val();
-    query += "&Ext=" + $('#tbExt').val();
-    query += "&Street=" + $('#tbStreet').val();
-    query += "&City=" + $('#tbCity').val();
-    query += "&State=" + $('#tbState').val();
-    query += "&Zip=" + $('#tbZip').val();
-    query += "&Comments=" + $('#tbComments').val();
+    if (validate_form()) {
+        var query = "";
+        query += "FirstName=" + $('#tbFirstName').val();
+        query += "&LastName=" + $('#tbLastName').val();
+        query += "&Email=" + $('#tbEmail').val();
+        query += "&Phone=" + $('#tbPhone').val();
+        query += "&Ext=" + $('#tbExt').val();
+        query += "&Street=" + $('#tbStreet').val();
+        query += "&City=" + $('#tbCity').val();
+        query += "&State=" + $('#tbState').val();
+        query += "&Zip=" + $('#tbZip').val();
+        query += "&Comments=" + $('#tbComments').val();
+
+        var relocation = $("#ContactForm input[type=hidden]").val().length > 0;
+        query += "&Relocation=" + relocation;
+        if (relocation) {
+            query += "&HasAgent=" + $('input[type=radio][name="agent"]:checked').val();
+            var $interests = $('input[type=radio][name="interests"]:checked');
+            var interests_array = new Array();
+            for(var i = 0; i < $interests.length; i++)
+                interests_array.push($interests.eq(0).val());
+            query += "&Interests=" + interests_array.join(',');
+            query += "&Moving=" + $('input[type=radio][name="agent"]:checked').val();
+            query += "&CitiesNeighborhoods=" + $("#RelocationNeighborhoods textarea").val();
+            query += "&MovingDate=" + $("#tbMovingDate").val();
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "http://www.porterproperties.com/app/ajax/?Type=Contact",
+            data: query,
+            contentType: "application/x-www-form-urlencoded",
+            cache: false
+        }).done(function (data) {
+            $('#ContactForm').slideUp();
+            $('#Contact_Success').html(data);
+            $('#Contact_Success').slideDown(function () {
+                $(this).animate({ opacity: 1 });
+            });
+        }).fail(function () {
+            alert('request failed to send');
+        });        
+    }
 }
 function validate_form() {
     $('#ContactForm-Entry div.error-message').remove();
@@ -88,9 +119,9 @@ function validate_form() {
         errors.push('comments or questions');
     }
 
+    var relocation_valid = true;
     if ($("#ContactForm input[type=hidden]").val().length > 0) {
-        alert('has relocation');
-        validate_relocation_form();
+        relocation_valid = validate_relocation_form();
     }
 
 
@@ -105,7 +136,12 @@ function validate_form() {
         $message.insertBefore('#MainForm');
 
         $('html, body').animate({ scrollTop: $('#MainForm').offset().top - 40 }, 300, function () { $message.slideDown(); });
-    }
+
+        return false;
+    } else if (relocation_valid)
+        return true;
+    else
+        return false;
 }
 function validate_relocation_form() {
     var errors = new Array();
@@ -127,7 +163,7 @@ function validate_relocation_form() {
 
     var $neighborhoods = $("#RelocationNeighborhoods textarea");
     $neighborhoods.removeClass('alert');
-    $neighborhoods.val($first_name.val().replace(/=/g, ' ').replace(/&/g, ' ').replace(/(?:\r\n|\r|\n)/g, ' ').trim());
+    $neighborhoods.val($neighborhoods.val().replace(/=/g, ' ').replace(/&/g, ' ').replace(/(?:\r\n|\r|\n)/g, ' ').trim());
     if ($neighborhoods.val().length == 0) {
         $neighborhoods.addClass('alert');
         errors.push('indicate what cities or neighborhoods you are interested in');
@@ -144,7 +180,10 @@ function validate_relocation_form() {
         $message.insertBefore('#RelocationForm');
 
         $('html, body').animate({ scrollTop: $('#MainForm').offset().top - 40 }, 300, function () { $message.slideDown(); });
-    }
+
+        return false;
+    } else
+        return true;
 }
 function validate_email(email) {
     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -186,7 +225,7 @@ function initializeMap() {
     var location = new google.maps.LatLng(32.61350783410655, -85.46389448518067);
     var myOptions = { zoom: 14, center: location, mapTypeId: google.maps.MapTypeId.ROADMAP, draggable: false, scrollwheel: false };
     var map = new google.maps.Map(document.getElementById('Map'), myOptions);
-    var marker = new google.maps.Marker({ position: location, map: map, draggable: false, icon: '/images/map/weichertIcon.png' });
+    var marker = new google.maps.Marker({ position: location, map: map, draggable: false, icon: '../res/images/map/weichertIcon.png' });
 }
 $(document).ready(function () {
     initializeMap();

@@ -1691,10 +1691,126 @@ function progress_image(progress) {
 function update_image_counter() {
     $('#Property-Photos span').html((current_image + 1) + ' of ' + $prop_tds.length);
 }
-function open_property_image() {
-    var mls = $('#Property-Photos').attr('mls');
 
-    window.open('Image.html#' + mls + '|' + current_image);
+var nat_width = 0;
+var display_current_image = 0;
+var $images = null;
+
+function open_property_display_images() {
+    $('#Property-Images-Navigation').show();
+    $('#Property-Images-Display').show();
+    $('#Property-Images-Tiles').hide();
+    $('#Property-Details').hide();
+    $('#Property-Navigation').hide();
+
+    display_current_image = current_image;
+    load_property_display_images();
+
+    $('#Zoom_Message').fadeIn();
+    display_zoom_message();
+    setTimeout('hide_zoom_message();', 2000);
+
+    goto_property_display_image(display_current_image);
+}
+function close_property_display_images() {
+    var $images = $("#Property-Images-Display img");
+    $images.eq(display_current_image).hide();
+
+    $('#Property-Images-Navigation').hide();
+    $('#Property-Images-Display').hide();
+    $('#Property-Images-Tiles').hide();
+
+    $('#Property-Details').show();
+    $('#Property-Navigation').show();
+}
+function load_property_display_images() {
+    var images_content = '<div id="Zoom_Message"></div>';
+    var tile_content = "";
+    if ($images.length > 0) {
+        for (var image = 0; image < $images.length; image++) {
+            var $image = $images.eq(image);
+            images_content += '<img src=' + $image.text() + ' />';
+            tile_content += '<div onclick="goto_property_display_image(' + image + ');"><div style="background-image: url(' + $image.text() + ');" ></div></div>';
+        }
+        var $images_content = $(images_content);
+        $("#Property-Images-Display").append($images_content);
+        var $tile_content = $(tile_content);
+        $("#Property-Images-Tiles").append($tile_content);
+    }
+}
+function goto_property_display_image(image_index) {
+    var $images = $("#Property-Images-Display img");
+    $images.eq(display_current_image).hide();
+    display_current_image = image_index;
+    $image = $images.eq(display_current_image);
+    $image.show();
+
+    $image.css({ width: 'auto' });
+    nat_width = $image.outerWidth();
+    nat_width = nat_width > $('#Property-Images-Display').width() * 2 ? nat_width : $('#Property-Images-Display').width() * 2;
+    $image.css({ width: '100%' });
+
+    $("#Property-Images-Tiles").stop().hide();
+    $("#Property-Images-Display").stop().show();
+}
+function display_zoom_message() {
+    $('#Zoom_Message').animate({ height: 30, width: 30, marginTop: -15, marginLeft: -15 }, function () {
+        $('#Zoom_Message').animate({ height: 50, width: 50, marginTop: -25, marginLeft: -25 }, function () {
+            display_zoom_message();
+        });
+    });
+}
+function hide_zoom_message() {
+    $('#Zoom_Message').stop().fadeOut(function () {
+        $(this).remove();
+    });
+}
+function display_property_display_list() {
+    $("#Property-Images-Display").stop().hide();
+    $("#Property-Images-Tiles").stop().show();
+}
+function progress_property_display_image(progress) {
+    hide_zoom_message();
+    var $images = $("#Property-Images-Display img");
+    $image.css({ width: '100%' }).hide();
+
+    display_current_image += (progress ? 1 : -1);
+    display_current_image = display_current_image < 0 ? display_current_image = $images.length - 1 : display_current_image;
+    display_current_image = display_current_image >= $images.length ? 0 : display_current_image;
+    goto_property_display_image(display_current_image);
+}
+function set_up_property_display_pinchzoom() {
+    $("#Property-Images-Display").swipe({
+        pinchStatus: function (event, phase, direction, distance, duration, fingerCount, pinchZoom, fingerData) {
+            if (fingerCount > 1) {
+                var max_steps = 20;
+                var container_width = $('#Property-Images-Display').width();
+                var container_height = $('#Property-Images-Display').height();
+                var display_width = $image.width();
+
+                var log_min_zoom = Math.log(container_width);
+                var log_max_zoom = Math.log(nat_width);
+                var log_zoom = Math.log(display_width);
+                var step = (log_zoom - log_min_zoom) * (max_steps - 1) / (log_max_zoom - log_min_zoom);
+                step += (pinchZoom > 1 ? 1 : -1);
+                step = step < 0 ? 0 : step;
+                step = step > 20 ? 20 : step;
+
+                log_zoom = log_min_zoom + (log_max_zoom - log_min_zoom) * step / (max_steps - 1);
+                zoom = Math.exp(log_zoom);
+
+                $image.css({ width: zoom });
+
+                $('#Property-Images-Display').scrollLeft((zoom - container_width) / 2);
+                var top_scroll = ($image.height() - container_height) / 2;
+                top_scroll = top_scroll < 0 ? 0 : top_scroll;
+
+                $('#Property-Images-Display').scrollTop(top_scroll);
+            }
+        },
+        fingers: 2,
+        threshold: 30
+    });
 }
 
 
@@ -1735,6 +1851,7 @@ function parse_property_xml($property_xml) {
         load_property_open_house($property)
         load_property_details($property, type);
         load_property_neighborhood($property);
+        load_property_map($property);
         load_property_disclaimer($property);
 
         set_property_directions_link($property);
@@ -1855,7 +1972,7 @@ function load_property_glance_details($property) {
     $("#Property-Details").append($glance);
 }
 function load_property_images($property, mls) {
-    var $images = $property.find("image");
+    $images = $property.find("image");
     if ($images.length > 0) {
         var images_content = '<div id="Property-Photos" mls="' + mls + '"><table><tr>';
         for (var image = 0; image < $images.length; image++) {
@@ -1866,8 +1983,10 @@ function load_property_images($property, mls) {
         var $images_content = $(images_content);
         $("#Property-Details").append($images_content);
         $("#Property-Photos p").swipe({ fingers: 'all', swipeLeft: progress_image_left, swipeRight: progress_image_right, allowPageScroll: "vertical" });
-        $("#Property-Photos").swipe({ tap: open_property_image });
+        $("#Property-Photos").swipe({ tap: open_property_display_images });
         size_property_photos();
+
+        load_property_display_images();
     }
 }
 function display_swipe_message() {
@@ -2167,6 +2286,21 @@ function load_property_neighborhood($property) {
         $("#Property-Details").append($content);
     }
 }
+function load_property_map($property) {
+    var content = '<div class="property-map">';
+    content += '\t<h3>Location</h3>';
+    content += '\t<div id="Property-Map">';
+    content += '\t</div>';
+    content += '</div>';
+    var $content = $(content);
+    $("#Property-Details").append($content);
+
+    var property_location = new google.maps.LatLng($property.find('latitude').text(), $property.find('longitude').text());
+    var property_map_options = { zoom: 14, center: property_location, mapTypeId: google.maps.MapTypeId.ROADMAP, draggable: false, scrollwheel: false };
+    var property_map = new google.maps.Map(document.getElementById('Property-Map'), property_map_options);
+    var property_marker = new google.maps.Marker({ position: property_location, map: property_map, draggable: false, icon: '../res/images/icons/home_marker.png' });
+
+}
 function load_property_disclaimer($property) {
     var $disclaimer = $('<div class="disclaimer">Courtesy of: ' + $property.find("disclaimer").text() + '</div>');
     $("#Property-Details").append($disclaimer);
@@ -2182,6 +2316,7 @@ function load_property_by_search() {
 }
 
 $(document).ready(function () {
+    set_up_property_display_pinchzoom();
     $(window).resize(function () {
         size_property_photos();
     });

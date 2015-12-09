@@ -21,7 +21,7 @@
     #ContactForm select {
         width: 100%;
         padding: 0px 8px 0px 8px;
-        background: #cfe1e7;
+        background: #fff;
         border: 0px;
         font-size: 12px;
         line-height: 32px;
@@ -155,18 +155,17 @@
             }
 
     #ContactForm #RelocationForm {
-        background: #F7F9FA;
         padding: 0px;
         margin: 10px 0px 10px 0px;
         display: none;
     }
         #ContactForm #RelocationForm > div {
-            padding: 10px;
-            background: #F7F9FA;
+            padding: 0px 0px 10px 0px;
         }
-            #ContactForm #RelocationForm > div:nth-child(2n+1) {
-                background: rgb(231, 238, 241);
-            }
+        #ContactForm #RelocationForm div.radios{
+            clear: both;
+            overflow:hidden;
+        }
         #ContactForm #RelocationForm div input.inline-textbox {
             width: 30px;
         }
@@ -257,7 +256,11 @@
                 background: #fff200;
             }
 
-
+#Contact_Success{
+    display: none;
+    font-weight: bold;
+    opacity: 0;
+}
 
 
 #ContactInformation {
