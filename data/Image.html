@@ -2,149 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-    <style>
-        *{
-            margin: 0px;
-            padding: 0px;
-        }
-        img {
-            display:none;
-            width: 100%;
-        }
-        #Property-Photos{
-            position: relative;
-            overflow:hidden;
-        }
-        #Property-Photos #Swipe_Message{
-            display: none;
-            z-index:20;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            margin:-20px 0px 0px -20px;
-            width:40px;
-            height: 40px;
-            background-image: url(../res/images/icons/icon_swipe.png);
-            background-size: 40px 40px;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
-        #Property-Photos #Close{
-            display: none;
-            z-index:20;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            width:16px;
-            height: 16px;
-            padding: 2px;
-            background-image: url(../res/images/icons/icon_delete.png);
-            background-size: 16px 16px;
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-color: #ffffff;
-            background-color: rgba(255,255,255,.7);
-            border-radius: 12px;
-            -webkit-border-radius: 12px;
-            -moz-border-radius: 12px;
-        }
-    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <link href="../css/phonegap_image.css" rel="Stylesheet" type="text/css" />
     <script src="../js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.touchSwipe.min.js"></script>
-    <script>
-        var current_image = 0;
-        var mls = null;
-        function retrieve_data() {
-            if (window.location.hash.length > 0) {
-                var hash = window.location.hash.substr(1);
-                var hash_parts = hash.split('|');
-                mls = hash_parts[0];
-                current_image = hash_parts[1];
-            }
-            retrieve_images();
-        }
-        function retrieve_images(){
-            var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=Property&mls=" + mls;
-            $.ajax({
-                url: ajaxUrl,
-                beforeSend: function (xhr) {
-                    xhr.overrideMimeType("text/plain; charset=x-user-defined");
-                },
-                cache: false
-            }).done(function (data) {
-                parse_property_xml($($.parseXML(data)));
-            }).fail(function () {
-                alert('page failed to load');
-            })
-        }
-        function parse_property_xml($property_xml) {
-            var $property = $property_xml.find("property");
-            if ($property.length > 0) {
-                load_property_images($property);
-            }
-        }
-        function load_property_images($property) {
-            var $images = $property.find("image");
-            var images_content = "";
-            if ($images.length > 0) {
-                for (var image = 0; image < $images.length; image++) {
-                    var $image = $images.eq(image);
-                    images_content += '<img src=' + $image.text() + ' />';
-                }
-                var $images_content = $(images_content);
-                $("#Property-Photos").append($images_content);
-                $("#Property-Photos").swipe({ fingers: 'all', swipeLeft: progress_image_left, swipeRight: progress_image_right, allowPageScroll: "vertical" });
-            }
-            $("#Property-Photos img").eq(current_image).show();
-            
-            $('#Swipe_Message').fadeIn();
-            display_swipe_message();
-            setTimeout('hide_swipe_message();', 2000);
-
-            $('#Close').fadeIn();
-        }
-
-        function progress_image_left() {
-            progress_image(true);
-        }
-        function progress_image_right() {
-            progress_image(false);
-        }
-        function progress_image(progress) {
-            hide_swipe_message();
-            var $images = $("#Property-Photos img");
-            $images.eq(current_image).hide();
-
-            current_image += (progress ? 1 : -1);
-            current_image = current_image < 0 ? current_image = $images.length - 1 : current_image;
-            current_image = current_image >= $images.length ? 0 : current_image;
-
-            $images.eq(current_image).show();
-        }
-        function display_swipe_message() {
-            $('#Swipe_Message').animate({ marginLeft: 0 }, function () {
-                $('#Swipe_Message').animate({ marginLeft: -30 }, function () {
-                    display_swipe_message();
-                });
-            });
-        }
-        function hide_swipe_message() {
-            $('#Swipe_Message').stop().fadeOut(function () {
-                $(this).remove();
-            });
-        }
-        
-
-        $(document).ready(function(){
-            retrieve_data();
-        });
-    </script>
+    <script src="../js/phonegap_image.js"></script>
 </head>
 <body>
-    
-    <div id="Property-Photos">
-        <div id="Swipe_Message"></div>
-        <p id="Close" onclick="window.close();"></p>
+    <div id="Property_Navigation">
+        <div class="prev" onclick="progress_image(false);"><i></i> Previous</div>
+        <div class="next" onclick="progress_image(true);"><i></i> Next</div>
+        <div class="close" onclick="window.close();"><i></i> Close</div>
+        <div class="list" onclick="display_list();"><i></i> List</div>
     </div>
+    <div id="Property-Photos">
+        <div id="Zoom_Message"></div>
+    </div>
+    <div id="Property-Photos-Tiles"></div>
 </body>
 </html>
