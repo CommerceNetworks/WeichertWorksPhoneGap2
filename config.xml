@@ -10,7 +10,7 @@
   </description>
 
   <author href = "http://commercenetworks.com" email = "support@commercenetworks.com">
-    Michael Reutebuch and Lee Anderson
+    Michael Reutebuch
   </author>
 
   <preference name="orientation" value="portrait" />
@@ -26,14 +26,7 @@
   
   <gap:plugin name="org.apache.cordova.geolocation" />
   <gap:plugin name="cordova-plugin-inappbrowser" />
-  <gap:plugin name="cordova-plugin-whitelist" />
   
-  <allow-intent href="http://*/*" />
-  <allow-intent href="https://*/*" />
-  <allow-intent href="sms:*" />
-  <allow-intent href="tel:*" />
-  <allow-intent href="geo:*" />
-    
   <access origin="*" />
 
   <!-- iOS-->

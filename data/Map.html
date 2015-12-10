@@ -14,32 +14,66 @@
     <script type="text/javascript" src="../js/jquery.touchSwipe.min.js" ></script>
     <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../js/jquery.ui.touch-punch.js" ></script>
-    <script type="text/javascript" src="../js/jquery.touchSwipe.min.js" ></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.22&sensor=false"></script>
     <script type="text/javascript" src="../js/markerwithlabel.js"></script>
     <script type="text/javascript" src="../js/infobox.js"></script>
     <script type="text/javascript" src="../cordova.js" ></script>
     <script type="text/javascript" src="../js/phonegap_map.js" ></script>
+    <script type="text/javascript" src="../js/phonegap_youtube_responsive.js"></script>
 </head>
 <body>
-    <div id="Map">
+    <div id="Map" class="active_panel">
         <div id="Map_Container"></div>
         <span class="more-listings"></span>
     </div>
     <div id="List"></div>
     <div id="Sort">
-        <ul>
-            <li filtered_key="price" filtered_order="false" onclick="update_sort(this, 'price', false);" class="selected">Price: High to Low</li>
-            <li filtered_key="price" filtered_order="true" onclick="update_sort(this, 'price', true);">Price: Low to High</li>
-            <li filtered_key="modified" filtered_order="false" onclick="update_sort(this, 'modified', false);">Listings: Newest First</li>
-            <li filtered_key="modified" filtered_order="true" onclick="update_sort(this, 'modified', true);">Listings: Oldest First</li>
-            <li filtered_key="built" filtered_order="false" onclick="update_sort(this, 'built', false);">Age: Newest First</li>
-            <li filtered_key="built" filtered_order="true" onclick="update_sort(this, 'built', true);">Age: Oldest First</li>
-            <li filtered_key="distance" filtered_order="true" onclick="update_sort(this, 'distance', true);">Nearby</li>
-        </ul>
+        <div class="sort-list">
+            <h1>Sort Listings by</h1>
+            <ul>
+                <li filtered_key="price" filtered_order="false" onclick="update_sort(this, 'price', false);">Price: High to Low</li>
+                <li filtered_key="price" filtered_order="true" onclick="update_sort(this, 'price', true);">Price: Low to High</li>
+                <li filtered_key="modified" filtered_order="false" onclick="update_sort(this, 'modified', false);">Listings: Newest First</li>
+                <li filtered_key="modified" filtered_order="true" onclick="update_sort(this, 'modified', true);">Listings: Oldest First</li>
+                <li filtered_key="built" filtered_order="false" onclick="update_sort(this, 'built', false);">Age: Newest First</li>
+                <li filtered_key="built" filtered_order="true" onclick="update_sort(this, 'built', true);">Age: Oldest First</li>
+                <li filtered_key="distance" filtered_order="true" onclick="update_sort(this, 'distance', true);">Nearby</li>
+            </ul>
+        </div>
+        <div class="sort-address">
+            <h1>Location</h1>
+            <div class="current-location">
+                <span class="button" onclick="use_current_location();">Use My Current Location &raquo;</span>
+            </div>
+            <h3>or Enter an Address</h3>
+            <div class="address-entry">
+                <form id="Address-Lookup-Form">
+                    <div class="street">
+                        <label for="nearby-address">Address</label>
+                        <input id="nearby-address" type="text" placeholder="street address" />
+                    </div>
+                    <div class="city">
+                        <label for="nearby-city">City</label>
+                        <input id="nearby-city" type="text" placeholder="city" />
+                    </div>
+                    <div class="state">
+                        <label for="nearby-state">State</label>
+                        <input id="nearby-state" type="text" placeholder="state" />
+                    </div>
+                    <div class="zip">
+                        <label for="nearby-zip">Zip</label>
+                        <input id="nearby-zip" type="text" placeholder="zip code" />
+                    </div>
+                    <div class="submit">
+                        <span class="button" onclick="use_entered_location();">Use This Address &raquo;</span>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div id="Search">
         <div class="details-search">
+            <h1>Find Listings Matching</h1>
             <div id="Property-Type" class="section spaced">
                 <label onclick="display_property_types();">Property Type: <span>Any</span></label>
                 <div class="cui-options">
@@ -109,14 +143,14 @@
                         <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
                         <h3>Available Multi-Family Types</h3>
                         <ul>
-                            <li cui-option="Multi-Family (2-4 Units) " onclick="select_cui_option(this);">Multi-Family (2-4 Units) <span></span></li>
-                            <li cui-option="Multi-Family (5+ Units) " onclick="select_cui_option(this);">Multi-Family (5+ Units) <span></span></li>
+                            <li cui-option="Multi-Family (2-4 Units)" onclick="select_cui_option(this);">Multi-Family (2-4 Units) <span></span></li>
+                            <li cui-option="Multi-Family (5+ Units)" onclick="select_cui_option(this);">Multi-Family (5+ Units) <span></span></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div id="Land-Info">
-                <div id="#Land-Sub-Types" class="section static cui">
+                <div id="Land-Sub-Types" class="section static cui">
                     <label onclick="display_overlay_options(this, true);">Lots and Land Type: <span>Any</span></label>
                     <div class="cui-overlay-options">
                         <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
@@ -131,7 +165,7 @@
             </div>
             <div id="Commercial-Info">
                 <div id="Commercial-Sub-Types" class="section static cui">
-                    <label onclick="display_overlay_options(this, true);">Lots and Land Type: <span>Any</span></label>
+                    <label onclick="display_overlay_options(this, true);">Commercial Type: <span>Any</span></label>
                     <div class="cui-overlay-options">
                         <span onclick="display_overlay_options(this, false);" class="cui-button">Back<i></i></span>
                         <h3>Commercial Types</h3>
@@ -214,12 +248,16 @@
             <span class="button" onclick="search_properties();">Search &raquo;</span>
         </div>
         <div class="mls-search">
+            <h1>Find Listing by MLS</h1>
             <form id="MLS-Search-Form">
                 <label>MLS Number</label> 
                 <input type="number" id="mls-input" placeholder="mls#" />
                 <span class="button" onclick="load_property_by_search();">Search &raquo;</span>
             </form>
         </div>   
+        <div class="saved-search">
+            <h1>Saved and Recent Searches</h1>
+        </div>
     </div>
     <div id="Loading"><img src="../res/images/icons/loadingiconwhitebg.gif" /></div>
     <div id="Search-Navigation" class="map-navigation">
@@ -228,12 +266,18 @@
                 <span class="cancel" onclick="close_search();"><i></i>Cancel</span>
             </div>
             <div class="right-controls">
+                <span class="clear" onclick="load_recent_search(null);"><i></i>Clear</span>
                 <span class="search"><i></i>Search</span>
             </div>
         </div>
         <div class="subnav">
             <div>
-                <label>Search by:</label><p><span class="mls" onclick="update_search_type('mls');">MLS#</span><span class="details active" onclick="update_search_type('details');">Property Details</span></p>
+                <label>Search by:</label>
+                <p>
+                    <span class="details active" onclick="update_search_type('details');">Property Details</span>
+                    <span class="mls" onclick="update_search_type('mls');">MLS#</span>
+                    <span class="saved" onclick="update_search_type('saved');">Saved and Recent</span>
+                </p>
             </div>
         </div>
     </div>
@@ -258,7 +302,7 @@
                 </a>
             </div>
             <div class="nearby">
-                <a href="Map.html#nearby" onclick="update_sort($('#Sort ul li[filtered_key=distance][filtered_order=true]'), 'distance' , true); return false;">
+                <a href="Map.html#nearby" onclick="close_search(); display_get_location(true); return false;">
                     <span></span>
                     <i>Nearby Homes</i>
                 </a>
@@ -310,6 +354,10 @@
         </div>
         <div id="Property-Images-Display"></div>
         <div id="Property-Images-Tiles"></div>
+    </div>
+    <div id="Results_Message">
+        <img src="../res/images/icons/loadingiconwhitebg.gif" />
+        <p>207 Listings Found</p>
     </div>
 </body>
 </html>

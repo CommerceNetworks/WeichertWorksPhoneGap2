@@ -13,6 +13,9 @@
         padding: 7px;
         background: #cfe1e7;
         border: 0px;
+        border-radius: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
         font-size:14px;
     }
 #Content #Items {

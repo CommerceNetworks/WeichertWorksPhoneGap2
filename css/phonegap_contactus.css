@@ -1,10 +1,12 @@
 ﻿#ContactForm {
-    margin: 0px 0px 10px 0px;
+    margin: 20px 0px 10px 0px;
+    padding-top: 20px;
     font-size: 12px;
     color: #231f20;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    border-top:1px solid #bbb;
 }
     #ContactForm div.error-message {
         display: none;
@@ -25,9 +27,14 @@
         border: 0px;
         font-size: 12px;
         line-height: 32px;
+        color: #2b4e5a;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border:1px solid #bbb;
     }
         #ContactForm input.alert,
         #ContactForm textarea.alert,
@@ -45,6 +52,9 @@
     #ContactForm #MainForm{}
         #ContactForm #MainForm label {
             display: block;
+            font-size: 12px;
+            line-height: 14px;
+            color: #2b4e5a;
         }
         #ContactForm #MainForm input[type=text],
         #ContactForm #MainForm input[type=tel],
@@ -116,6 +126,7 @@
         overflow: hidden;
     }
         #ContactForm #Buttons #LookingToMove {
+            display: none;
             clear: both;
             padding: 10px;
             text-align: center;
@@ -298,97 +309,3 @@
     #ContactInformation img {
         max-width: 100%;
     }
-#ContactOverlay {
-    z-index: 2;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    background: #ffffff;
-    background: rgba(255,255,255,.8);
-}
-
-#Directions {
-    position: absolute;
-    left: 50%;
-    top: 10px;
-    width: 292px;
-    padding: 10px;
-    margin-left: -146px;
-    background: #F7F7F7;
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.5); /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.5); /* Firefox 3.5 - 3.6 */
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,.5); /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-    #Directions div {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-        #Directions div label {
-            display: block;
-            padding: 15px 0px 0px 6px;
-            font-size: 12px;
-            line-height: 12px;
-            color: #231f20;
-            font-family: Arial, Tahoma, Verdana, Sans-Serif;
-        }
-        #Directions div input {
-            width: 100%;
-            padding: 0px 0px 0px 6px;
-            font-family: Arial, Tahoma, Verdana, Sans-Serif;
-            font-size: 12px;
-            line-height: 24px;
-            color: #23375a;
-            border: 0;
-            background: #cfe1e7;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-        #Directions div.street {
-            width: 100%;
-        }
-        #Directions div.city {
-            float: left;
-            width: 50%;
-            padding-right: 8px;
-        }
-        #Directions div.state {
-            float: left;
-            width: 17%;
-            padding-right: 8px;
-        }
-        #Directions div.zip {
-            float: left;
-            width: 33%;
-        }
-        #Directions div.buttons {
-            clear: both;
-            overflow: hidden;
-        }
-        #Directions div span {
-            float: right;
-            height: 14px;
-            padding: 8px;
-            margin: 8px 2px 3px 6px;
-            text-align: center;
-            color: #1c3239;
-            font-size: 12px;
-            cursor: pointer;
-            background: #d9c805;
-            text-decoration: none;
-        }
-            #Directions div span:hover {
-                background: #fff200;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }

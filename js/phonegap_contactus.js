@@ -205,33 +205,30 @@ function updateRelocationForm() {
     $("#SubmitForm").fadeToggle();
 }
 
-function openDirections() {
-    $('#ContactOverlay').stop().show().css({ opacity: 0 }).animate({ opacity: 1 });
-}
-function closeDirections() {
-    $('#ContactOverlay').stop().hide();
-}
-function getDirections() {
-    var streetaddress = encodeURIComponent($('#dirAddress').val());
-    var city = encodeURIComponent($('#dirCity').val());
-    var state = encodeURIComponent($('#dirState').val());
-    var zip = encodeURIComponent($('#dirZip').val());
-    var url = "http://maps.google.com/maps?saddr=" + streetaddress + "," + city + "," + state + "&daddr=Porter+Properties,427+North+Dean+Road+Suite+200,+Auburn,+AL+36830&hl=en";
-    window.open(url, 'Directions');
-    closeDirections();
+function get_directions() {
+    var address = '427 North Dean Road Auburn, AL, 36830';
+    location.href = "http://maps.apple.com/?daddr=" + address;
 }
 
-function initializeMap() {
+function initialize_map() {
     var location = new google.maps.LatLng(32.61350783410655, -85.46389448518067);
     var myOptions = { zoom: 14, center: location, mapTypeId: google.maps.MapTypeId.ROADMAP, draggable: false, scrollwheel: false };
     var map = new google.maps.Map(document.getElementById('Map'), myOptions);
-    var marker = new google.maps.Marker({ position: location, map: map, draggable: false, icon: '../res/images/map/weichertIcon.png' });
+    var icon_image = {
+        url: '../res/images/icons/icon_weichert_marker.png',
+        size: new google.maps.Size(60, 80),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(15, 40),
+        scaledSize: new google.maps.Size(30, 40)
+    };
+    var marker = new google.maps.Marker({ position: location, map: map, draggable: false, icon: icon_image });
 }
 $(document).ready(function () {
-    initializeMap();
-    $('#ContactOverlay').stop().hide();
-    $("#LookingToMove").click(function () { updateRelocationForm() });
-    if ($("#ContactForm input:hidden").val().length > 0) {
-        updateRelocationForm();
-    }
+    geocoder = new google.maps.Geocoder();
+    initialize_map();
+    $('#Contact_Overlay').stop().hide();
+    //$("#LookingToMove").click(function () { updateRelocationForm() });
+    //if ($("#ContactForm input:hidden").val().length > 0) {
+    //    updateRelocationForm();
+    //}
 });

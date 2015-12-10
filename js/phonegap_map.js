@@ -13,13 +13,13 @@ function supports_html5_storage() {
     }
 }
 function build_stored_property_list() {
-
     $('#Search div.mls-search div.stored_list').remove();
+    $('#Search div.saved-search div.stored_list').remove();
 
     var stored_properties = localStorage["stored_props"];
-
     if (stored_properties != null) {
-		var $stored_list = $('<div class="stored_list"></div>')
+        // for mls search pane
+        var $stored_list = $('<div class="stored_list"></div>');
 		$stored_list.append($('<h3>Saved Listings</h3>'));
 		$('#Search div.mls-search').append($stored_list);
 		var stored_array = stored_properties.split(',');
@@ -40,6 +40,57 @@ function build_stored_property_list() {
 			$property.append($remove);
 			$stored_list.append($property);
 		}
+
+        // for saved and recent
+		var $stored_mls_list = $('<div class="stored_list"></div>');
+		$('#Search div.saved-search').append($stored_mls_list);
+		for (var property = 0; property < stored_array.length; property++) {
+		    var $property = $('<div></div>');
+		    var $label = $('<label>mls#: ' + stored_array[property] + '</label>');
+		    $label.attr('mls', stored_array[property]);
+		    $label.click(function () {
+		        load_property($(this).attr('mls'));
+		    });
+		    $property.append($label);
+		    var $remove = $('<span></span>');
+		    $remove.attr('mls', stored_array[property]);
+		    $remove.click(function () {
+		        if (confirm('Are you sure you would like to remove ' + $(this).attr('mls') + ' from your saved properties?'))
+		            remove_from_stored_property_list($(this).attr('mls'));
+		    });
+		    $property.append($remove);
+		    $stored_mls_list.append($property);
+		}
+    }
+
+    var stored_searches = localStorage["stored_searches"];
+    if (stored_searches != null) {
+        var $stored_searches_list = $('#Search div.saved-search div.stored_list');
+        if ($stored_searches_list.length == 0) {
+            $stored_searches_list = $('<div class="stored_list"></div>');
+            $('#Search div.saved-search').append($stored_mls_list);
+        }
+        var stored_array = stored_searches.split(';');
+        for (var search = 0; search < stored_array.length; search++) {
+            var search_array = stored_array[search].split(':');
+
+            var $search = $('<div></div>');
+            var $label = $('<label>search: ' + search_array[1] + '</label>');
+            $label.attr('params', search_array[0]);
+            $label.click(function () {
+                load_recent_search($(this).attr('params'));
+            });
+            $search.append($label);
+            var $remove = $('<span></span>');
+            $remove.attr('params', search_array[0]);
+            $remove.attr('index', search);
+            $remove.click(function () {
+                if (confirm('Are you sure you would like to remove this search?'))
+                    remove_from_stored_search_list(parseInt($(this).attr('index')));
+            });
+            $search.append($remove);
+            $stored_searches_list.append($search);
+        }
     }
 }
 function remove_from_stored_property_list(mls) {
@@ -57,6 +108,18 @@ function remove_from_stored_property_list(mls) {
     }
     build_stored_property_list();
 }
+function remove_from_stored_search_list(index) {
+    var stored_searches = localStorage["stored_searches"];
+    if (stored_searches != null) {
+        var stored_array = stored_searches.split(';');
+        stored_array.splice(index, 1);
+        if (stored_array.length > 0)
+            localStorage["stored_searches"] = stored_array.join(';');
+        else
+            localStorage.removeItem("stored_searches");
+    }
+    build_stored_property_list();
+}
 
 $(document).ready(function () {
     has_local_storage = supports_html5_storage();
@@ -70,6 +133,7 @@ $(document).ready(function () {
 /*      User Current Position               */
 /*                                          */
 /*------------------------------------------*/
+var geocoder = null;
 var loc_latlng = null;
 var current_marker = null;
 var earth_radius = 6371;
@@ -83,31 +147,67 @@ function get_current_position() {
 function current_position_success(position) {
     try {
         loc_latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        add_current_location_marker();
+        update_property_objects_distance();
     } catch (err) {
         current_position_error(err);
-    }
-    initiate_map();
+    }    
 }
 function current_position_error(error) {
     alert('Current location could not be determined. Nearby will defined relative to Auburn and Opelika. ');
     loc_latlng = new google.maps.LatLng(32.627, -85.431);
-    initiate_map();
+    add_current_location_marker();
+    update_property_objects_distance();    
 }
+
+function find_entered_location() {
+    var street = $('#nearby-address').val();
+    var city = $('#nearby-city').val();
+    var state = $('#nearby-state').val();
+    var zip = $('#nearby-zip').val();
+    var address = street + ", " + city + ", " + state + ", " + zip;
+    geocoder.geocode({ 'address': address },
+        function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    loc_latlng = results[0].geometry.location;
+                    add_current_location_marker();
+                    update_property_objects_distance();
+                }else
+                    current_position_error();
+            } else {
+                current_position_error();
+            }
+        }
+    );
+}
+
 function add_current_location_marker() {
-    current_marker = new MarkerWithLabel({
-        position: loc_latlng,
-        draggable: false,
-        raiseOnDrag: false,
-        icon: "../res/images/icons/transparent.png",
-        labelContent: '',
-        labelAnchor: new google.maps.Point(10,  15),
-        labelClass: "here-label",
-        isClicked: false,
-        map: map,
-        title: 'You Are Here',
-        zIndex: google.maps.Marker.MAX_ZINDEX,
-        labelZIndex: 2000
-    });
+    if (current_marker == null) {
+        current_marker = new MarkerWithLabel({
+            position: loc_latlng,
+            draggable: false,
+            raiseOnDrag: false,
+            icon: "../res/images/icons/transparent.png",
+            labelContent: '',
+            labelAnchor: new google.maps.Point(10, 15),
+            labelClass: "here-label",
+            isClicked: false,
+            map: map,
+            title: 'You Are Here',
+            zIndex: google.maps.Marker.MAX_ZINDEX,
+            labelZIndex: 2000
+        });
+    } else {
+        current_marker.setPosition(loc_latlng);
+    }
+}
+function update_property_objects_distance() {
+    for (var property = 0; property < filtered_property_objects_array.length; property++) {
+        var property_object = filtered_property_objects_array[property];
+        property_object.distance = calculate_property_distance(property_object.latlng);
+    }
+    sort_by_nearby();
 }
 // nearby functions (haversine formula)
 function calculate_property_distance(prop_latlng) {
@@ -131,7 +231,8 @@ function convert_degrees_to_radians(degrees) {
 }
 
 $(document).ready(function () {
-    get_current_position();
+    geocoder = new google.maps.Geocoder();
+    initiate_map();
 });
 
 
@@ -216,11 +317,8 @@ function set_defaults() {
         if (hash == 'search') {
             display_search();
         } else {
-            active_panel = 'Map';
-            filtered_key = 'Nearby';
-            filtered_asc = true;
-            set_default_sort(filtered_key, filtered_asc);
-            add_current_location_marker();
+            display_sort();
+            display_get_location(true);
         }
         add_initial_markers_to_map(displayed_count);
     } else
@@ -315,6 +413,7 @@ function add_markers_to_map(start_position) {
         });
         $('#List').append($more);
     }
+    $('#Loading').hide();
 }
 function add_marker(property_object, property) {
     if (property_object.latlng != null) {
@@ -721,9 +820,11 @@ function display_sort() {
     $('#List').removeClass('active_panel');
     $('#Sort').addClass('active_panel');
 
-    // dont set sort as active panel, no need for client to start on this page
+    display_get_location(false);
 }
 function display_search() {
+    close_property_display_images();
+    unload_property();
     $('#Sort').removeClass('active_panel');
     $('#Map').removeClass('active_panel');
     $('#List').removeClass('active_panel');
@@ -731,7 +832,6 @@ function display_search() {
     $('#Search-Navigation').show();
     $('#Search').scrollTop(0);
 }
-
 
 /*------------------------------------------*/
 /*                                          */
@@ -741,27 +841,18 @@ function display_search() {
 function update_sort(obj, key, ascending) {
     filtered_key = key;
     filtered_asc = ascending;
-
-    $('#Sort').removeClass('active_panel');
-    $('#Sort li').removeClass('selected');
-
-    $('#Search').removeClass('active_panel');
-    $('#Search-Navigation').hide();
-
-    if (active_panel == 'Sort')
-        active_panel = "Map";
-    $('#' + active_panel).addClass('active_panel');
-
     $(obj).addClass('selected');
 
     if (key == "distance") {
-        update_property_objects_for_nearby();
-    }
-    sort_filter_array_by_key(key, ascending);
+        display_get_location(true);
+    } else {
+        close_sort();
+        sort_filter_array_by_key(key, ascending);
 
-    remove_markers_and_listings();
-    tied_markers = new Array();
-    add_markers_to_map(0);
+        remove_markers_and_listings();
+        tied_markers = new Array();
+        add_markers_to_map(0);
+    }
 }
 function sort_filter_array_by_key(key, ascending) {
     filtered_property_objects_array = filtered_property_objects_array.sort(function (a, b) {
@@ -784,25 +875,53 @@ function sort_filter_array_by_key(key, ascending) {
             return x < y ? 1 : -1;
         }
     });
+
+    for(item = 0; item < filtered_property_objects_array.length; item++)
+        console.log(filtered_property_objects_array[item].distance);
+}
+
+function display_get_location(display) {
+    $('#Sort').scrollTop(0);
+    if (display) {
+        $('#Sort div.sort-address').show();
+        $('#Sort div.sort-list').hide();
+    } else {
+        $('#Sort div.sort-address').hide();
+        $('#Sort div.sort-list').show();
+    }
+    
+}
+function use_current_location() {
+    $('#Loading').show();
+    update_property_objects_for_nearby();
+    close_sort();
 }
 function update_property_objects_for_nearby() {
-    navigator.geolocation.getCurrentPosition(current_position_update_success, current_position_update_error);
+    navigator.geolocation.getCurrentPosition(current_position_success, current_position_error);
 }
-function current_position_update_success(position) {
-    loc_latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    alert(position.coords.latitude + ', ' + position.coords.longitude);
-    update_property_objects_distance();
+function use_entered_location() {
+    $('#Loading').show();
+    find_entered_location();
+    close_sort();
 }
-function current_position_update_error(error) {
-    alert('Current location could not be determined. Nearby will defined relative to Auburn and Opelika. ');
-    loc_latlng = new google.maps.LatLng(32.627, -85.431);
-    update_property_objects_distance();
+function sort_by_nearby() {
+    sort_filter_array_by_key("distance", true);
+    remove_markers_and_listings();
+    tied_markers = new Array();
+    add_markers_to_map(0);
 }
-function update_property_objects_distance() {
-    for (var property = 0; property < filtered_property_objects_array.length; property++) {
-        var property_object = filtered_property_objects_array[property];
-        property_object.distance = calculate_property_distance(property_object.latlng);
-    }
+function close_sort() {
+    display_get_location(false);
+
+    $('#Sort').removeClass('active_panel');
+    $('#Sort li').removeClass('selected');
+
+    $('#Search').removeClass('active_panel');
+    $('#Search-Navigation').hide();
+
+    if (active_panel == 'Sort')
+        active_panel = "Map";
+    $('#' + active_panel).addClass('active_panel');
 }
 
 
@@ -1398,6 +1517,7 @@ function select_property_type(obj) {
 $(document).ready(function () {
     update_search_type('details');
     $("#MLS-Search-Form").submit(function () { load_property_by_search(); return false; });
+    $("#Address-Lookup-Form").submit(function () { use_entered_location(); return false; });
 });
 
 
@@ -1406,30 +1526,271 @@ $(document).ready(function () {
 /*      Search                              */
 /*                                          */
 /*------------------------------------------*/
+function load_recent_search(params) {
+    //clear
+    $('#Property-Type ul li').removeClass('active');
+    set_property_type($('#Property-Type ul li').eq(0));
+    $('#Search #Residential-Sub-Types ul li').removeClass('active');
+    $('#Search #Residential-Sub-Types label span').text('Any');
+    $('#Search #Multi-Family-Sub-Types ul li').removeClass('active');
+    $('#Search #Multi-Family-Sub-Types label span').text('Any');
+    $('#Search #Land-Sub-Types ul li').removeClass('active');
+    $('#Search #Land-Sub-Types label span').text('Any');
+    $('#Search #Commercial-Sub-Types ul li').removeClass('active');
+    $('#Search #Commercial-Sub-Types label span').text('Any');
+    $('#Search #MLS-Area ul li').removeClass('active');
+    $('#Search #MLS-Area label span').text('Any');
+    $('#Search #MLS-City ul li').removeClass('active');
+    $('#Search #MLS-City label span').text('Any');
+    $('#Search #MLS-School ul li').removeClass('active');
+    $('#Search #MLS-School label span').text('Any');
+    close_type_overlays();
+
+    var $slider = $("#Price-Range");
+    $slider.slider('values', 0, 0);
+    $slider.slider('values', 1, 50);
+    populate_price_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+    $slider = $("#Bed-Range");
+    $slider.slider('values', 0, 1);
+    $slider.slider('values', 1, 5);
+    populate_bed_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+    $slider = $("#Bath-Range");
+    $slider.slider('values', 0, 1);
+    $slider.slider('values', 1, 9);
+    populate_bath_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+    $slider = $("#Home-Size-Range");
+    $slider.slider('values', 0, 0);
+    $slider.slider('values', 1, 5);
+    populate_homesize_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+    $slider = $("#Lot-Size-Range");
+    $slider.slider('values', 0, 0);
+    $slider.slider('values', 1, 9);
+    populate_lotsize_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+    $slider = $("#Home-Age-Range");
+    $slider.slider('values', 0, 0);
+    $slider.slider('values', 1, 9);
+    populate_homeage_range($slider.slider("values", 0), $slider.slider("values", 1));
+
+
+    if (params != null) {
+        var params_array = params.split('|');
+        if (params_array.length > 0) {
+            var type_array = params_array[0].split(',');
+            var type_value = type_array[1];
+            if (type_value == 'Any')
+                set_property_type($('#Property-Type ul li').eq(0));
+            else
+                set_property_type($('#Property-Type ul li[cui-option=' + type_value + ']'));
+
+            $('#Property-Type').removeClass('active');
+            $('#Property-Type div').stop().slideUp();
+
+            if (params_array.length > 1) {
+                var property_type = parseInt(type_array[0]);
+                var sub_type_array = params_array[1].split(',');
+                if (property_type == 1) {
+                    for (type = 0; type < sub_type_array.length; type++)
+                        select_cui_option($('#Search #Residential-Sub-Types ul li[cui-option="' + sub_type_array[type] + '"]'));
+                } else if (property_type == 2) {
+                    for (type = 0; type < sub_type_array.length; type++)
+                        select_cui_option($('#Search #Multi-Family-Sub-Types ul li[cui-option="' + sub_type_array[type] + '"]'));
+                } else if (property_type == 3) {
+                    for (type = 0; type < sub_type_array.length; type++)
+                        select_cui_option($('#Search #Land-Sub-Types ul li[cui-option="' + sub_type_array[type] + '"]'));
+                } else if (property_type == 4) {
+
+                    for (type = 0; type < sub_type_array.length; type++) {
+                        select_cui_option($('#Search #Commercial-Sub-Types ul li[cui-option="' + sub_type_array[type] + '"]'));
+                    }
+                }
+            }
+        }
+
+
+        if (params_array.length > 2) {
+            var price_array = params_array[2].split(',');
+            var $slider = $("#Price-Range");
+            $slider.slider('values', 0, get_value_for_price(parseInt(price_array[0])));
+            $slider.slider('values', 1, get_value_for_price(parseInt(price_array[1])));
+            populate_price_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 3) {
+            var bed_array = params_array[3].split(',');
+            var $slider = $("#Bed-Range");
+            $slider.slider('values', 0, get_value_for_beds(parseInt(bed_array[0])));
+            $slider.slider('values', 1, get_value_for_beds(parseInt(bed_array[1])));
+            populate_bed_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 4) {
+            var bath_array = params_array[4].split(',');
+            var $slider = $("#Bath-Range");
+            $slider.slider('values', 0, get_value_for_baths(parseFloat(bath_array[0])));
+            $slider.slider('values', 1, get_value_for_baths(parseFloat(bath_array[1])));
+            populate_bath_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 5) {
+            var home_size_array = params_array[5].split(',');
+            var $slider = $("#Home-Size-Range");
+            $slider.slider('values', 0, get_value_for_homesize(parseInt(home_size_array[0])));
+            $slider.slider('values', 1, get_value_for_homesize(parseInt(home_size_array[1])));
+            populate_homesize_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 6) {
+            var lot_size_array = params_array[6].split(',');
+            var $slider = $("#Lot-Size-Range");
+            $slider.slider('values', 0, get_value_for_lotsize(parseFloat(lot_size_array[0])));
+            $slider.slider('values', 1, get_value_for_lotsize(parseFloat(lot_size_array[1])));
+            populate_lotsize_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 7) {
+            var home_age_array = params_array[7].split(',');
+            var $slider = $("#Home-Age-Range");
+            $slider.slider('values', 0, get_value_for_homeage(parseInt(home_age_array[0])));
+            $slider.slider('values', 1, get_value_for_homeage(parseInt(home_age_array[1])));
+            populate_homeage_range($slider.slider("values", 0), $slider.slider("values", 1));
+        }
+
+        if (params_array.length > 8) {
+            var area_array = params_array[8].split(',');
+            for (area = 0; area < area_array.length; area++)
+                select_cui_option($('#Search #MLS-Area ul li[cui-option="' + area_array[area] + '"]'));
+        }
+
+        if (params_array.length > 9) {
+            var city_array = params_array[9].split(',');
+            for (city = 0; city < city_array.length; city++)
+                select_cui_option($('#Search #MLS-City ul li[cui-option="' + city_array[city] + '"]'));
+        }
+
+        if (params_array.length > 10) {
+            var school_array = params_array[10].split(',');
+            for (school = 0; school < school_array.length; school++)
+                select_cui_option($('#Search #MLS-School ul li[cui-option="' + school_array[school] + '"]'));
+        }
+    } 
+    update_search_type('details');
+}
+function set_property_type($li) {
+    $li.parent().find('li').removeClass('active');
+    $li.addClass('active');
+    var value = $li.attr('cui-option');
+    if (value.length > 0) {
+        $('#Property-Type label span').html($li.text());
+    } else {
+        $('#Property-Type label span').html('Any');
+    }
+
+    $('#Residential-Info').hide();
+    $('#Multi-Family-Info').hide();
+    $('#Land-Info').hide();
+    $('#Commercial-Info').hide();
+
+    if (value == 'Residential')
+        $('#Residential-Info').show();
+    if (value == 'Multi-Family')
+        $('#Multi-Family-Info').show();
+    if (value == 'Land')
+        $('#Land-Info').show();
+    if (value == 'Commercial')
+        $('#Commercial-Info').show();
+}
+function get_value_for_price(price) {
+    var value = 0;
+    if (price <= 200000) 
+        value = price / 10000;
+    else if (price <= 500000) 
+        value = (price - 200000) / 25000 + 20;
+    else if (price <= 1000000) 
+        value = (price - 500000) / 50000 + 32;
+    else if (price < 1000000000) 
+        value = (price - 1000000) / 250000 + 42;
+    else 
+        value = 50;
+    
+    return value;
+}
+function get_value_for_beds(beds) {
+    var value = 0;
+    if (beds < 5) 
+        value = beds;
+    else 
+        value = 5;
+    
+    return value;
+}
+function get_value_for_baths(baths) {
+    var value = 0;
+    if (baths < 9)
+        value = (baths - 1) * 2 + 1;
+    else
+        value = 9;
+
+    return value;
+}
+function get_value_for_homesize(sqft) {
+    var value = 0;
+    if(value < 4)
+        value = sqft / 1000;
+    else
+        value = 4;
+
+    return value;
+}
+function get_value_for_lotsize(acres) {
+    var value = 0;
+    if (acres <= 1)
+        value = acres * 2;
+    else if (acres <= 5)
+        value = (acres - 1) / 2 + 2;
+    else if (acres < 10)
+        value = (acres - 5) / 2.5 + 4;
+    else
+        value = 6;
+
+    return value;
+}
+function get_value_for_homeage(age) {
+    var value = 0;
+
+    if (age < 2)
+        value = age;
+    else if (age < 10)
+        value = (age - 2) / 2 + 2;
+    else
+        value = 6;
+
+    return value;
+}
+function close_type_overlays() {
+    display_overlay_options($('#Search #Residential-Sub-Types label').eq(0), false);
+    display_overlay_options($('#Search #Multi-Family-Sub-Types label').eq(0), false);
+    display_overlay_options($('#Search #Land-Sub-Types label').eq(0), false);
+    display_overlay_options($('#Search #Commercial-Sub-Types label').eq(0), false);
+    display_overlay_options($('#Search #MLS-Area label').eq(0), false);
+    display_overlay_options($('#Search #MLS-City label').eq(0), false);
+    display_overlay_options($('#Search #MLS-School label').eq(0), false);
+}
+
 function search_properties() {
     filtered_property_objects_array = property_objects_array.slice(0);
+    var search_params = "";
+    var search_descr = "";
+    var valid_search = false;
 
-    var min_price = parseInt($('#min-price').val());
-    var max_price = parseInt($('#max-price').val());
-
-    var min_beds = parseInt($('#min-beds').val());
-    var max_beds = parseInt($('#max-beds').val());
-
-    var min_baths = parseFloat($('#min-baths').val());
-    var max_baths = parseFloat($('#max-baths').val());
-
-    var min_sqft = parseInt($('#min-home-size').val());
-    var max_sqft = parseInt($('#max-home-size').val());
-
-    var min_acre = parseFloat($('#min-lot-size').val());
-    var max_acre = parseFloat($('#max-lot-size').val());
-
-    var min_age = parseInt($('#min-home-age').val());
-    var max_age = parseInt($('#max-home-age').val());
-
-    var property_type = null; 
+    var property_type = null;
+    var type_value = "";
     if ($('#Property-Type ul li.active').length > 0) {
-        var type_value = $('#Property-Type ul li.active').attr('cui-option');
+        type_value = $('#Property-Type ul li.active').attr('cui-option');
         if (type_value.length > 0) {
             switch (type_value) {
                 case "Multi-Family":
@@ -1447,50 +1808,135 @@ function search_properties() {
             }
         }
     }
+    // params for recent searches
+    valid_search = (property_type > 1);
+    search_params += ( property_type == null ? 0 : property_type) + ',' + type_value + ',' + $('#Property-Type label span').text();
+    search_descr += (type_value.length > 0 ? type_value : 'Any') + ' Properties';
 
     var selected_subtype_array = new Array();
-    if (property_type == 1) {
-        var $selected_types = $('#Search #Residential-Sub-Types ul li.active');
-        for (var type = 0; type < $selected_types.length; type++) {
-            selected_subtype_array.push($selected_types.eq(type).attr('cui-option'));
-        }
-    } else if (property_type == 2) {
-        var $selected_types = $('#Search #Multi-Family-Sub-Types ul li.active');
-        for (var type = 0; type < $selected_types.length; type++) {
-            selected_subtype_array.push($selected_types.eq(type).attr('cui-option'));
-        }
-    } else if (property_type == 3) {
-        var $selected_types = $('#Search #Land-Sub-Types ul li.active');
-        for (var type = 0; type < $selected_types.length; type++) {
-            selected_subtype_array.push($selected_types.eq(type).attr('cui-option'));
-        }
-    } else if (property_type == 4) {
-        var $selected_types = $('#Search #Commercial-Sub-Types ul li.active');
+    var $selected_types = null;
+    if (property_type == 1) 
+        $selected_types = $('#Search #Residential-Sub-Types ul li.active');
+    else if (property_type == 2) 
+        $selected_types = $('#Search #Multi-Family-Sub-Types ul li.active');
+    else if (property_type == 3) 
+        $selected_types = $('#Search #Land-Sub-Types ul li.active');
+    else if (property_type == 4) 
+        $selected_types = $('#Search #Commercial-Sub-Types ul li.active');
+
+    if ($selected_types != null) {
         for (var type = 0; type < $selected_types.length; type++) {
             selected_subtype_array.push($selected_types.eq(type).attr('cui-option'));
         }
     }
+    // params for recent searches
+    valid_search = (selected_subtype_array.length > 0) ? true : valid_search;
+    search_params += '|' + selected_subtype_array.join(',');
+    search_descr += selected_subtype_array.length > 0 ? ' (' + selected_subtype_array.join(',') + ')' : '';
 
-    console.log(selected_subtype_array);
 
+    var min_price = parseInt($('#min-price').val());
+    var max_price = parseInt($('#max-price').val());
+    // params for recent searches
+    valid_search = (min_price > 0 || max_price < 1000000000) ? true : valid_search;
+    search_params += '|' + min_price + ',' + max_price + ',' + $('#Price-Range-Label').text();
+    if (min_price > 0 || max_price < 1000000000) {
+        search_descr += ', ' + $('#Price-Range-Label').text();
+    } else {
+        search_descr += ', no price range';
+    }
+    
+
+    var min_beds = parseInt($('#min-beds').val());
+    var max_beds = parseInt($('#max-beds').val());
+    // params for recent searches
+    if (property_type == 1) {
+        valid_search = (min_beds > 1 || max_beds < 100) ? true : valid_search;
+        search_params += '|' + min_beds + ',' + max_beds + ',' + $('#Bed-Range-Label').text();
+        if (min_beds > 1 || max_beds < 100)
+            search_descr += ', ' + $('#Bed-Range-Label').text() + ' beds';
+    } else {
+        search_params += '|1,100,1 to no max';
+    }
+    
+
+    var min_baths = parseFloat($('#min-baths').val());
+    var max_baths = parseFloat($('#max-baths').val());
+    // params for recent searches
+    if (property_type == 1) {
+        valid_search = (min_baths > 0 || max_baths < 100) ? true : valid_search;
+        search_params += '|' + min_baths + ',' + max_baths + ',' + $('#Bath-Range-Label').text();
+        if (min_baths > 1 || max_baths < 100)
+            search_descr += ', ' + $('#Bath-Range-Label').text() + ' baths';
+    } else {
+        search_params += '|1,100,1 to no max';
+    }
+    
+
+    var min_sqft = parseInt($('#min-home-size').val());
+    var max_sqft = parseInt($('#max-home-size').val());
+    // params for recent searches
+    valid_search = (min_sqft > 0 || max_sqft < 1000000000) ? true : valid_search;
+    search_params += '|' + min_sqft + ',' + max_sqft + ',' + $('#Home-Size-Range-Label').text();
+    if (min_sqft > 0 || max_sqft < 1000000000)
+        search_descr += ', ' + $('#Home-Size-Range-Label').text();
+
+
+    var min_acre = parseFloat($('#min-lot-size').val());
+    var max_acre = parseFloat($('#max-lot-size').val());
+    // params for recent searches
+    valid_search = (min_acre > 0 || max_acre < 100000) ? true : valid_search;
+    search_params += '|' + min_acre + ',' + max_acre + ',' + $('#Lot-Size-Range-Label').text();
+    if (min_acre > 0 || max_acre < 100000)
+        search_descr += ', ' + $('#Lot-Size-Range-Label').text();
+
+
+    var min_age = parseInt($('#min-home-age').val());
+    var max_age = parseInt($('#max-home-age').val());
+    // params for recent searches
+    valid_search = (min_age > 0 || max_age < 1000) ? true : valid_search;
+    search_params += '|' + min_age + ',' + max_age + ',' + $('#Home-Age-Range-Label').text();
+    if (min_age > 0 || max_age < 1000)
+        search_descr += ', ' + $('#Home-Age-Range-Label').text();
 
     var $selected_area = $('#Search #MLS-Area ul li.active');
     var selected_area_array = new Array();
+    var selected_areaname_array = new Array();
     for (var area = 0; area < $selected_area.length; area++) {
         selected_area_array.push(parseInt($selected_area.eq(area).attr('cui-option')));
+        selected_areaname_array.push($selected_area.eq(area).text());
     }
+    // params for recent searches
+    valid_search = (selected_area_array.length > 0) ? true : valid_search;
+    search_params += '|' + selected_area_array.join(',');
+    if (selected_areaname_array.length > 0)
+        search_descr += ', Areas (' + selected_areaname_array.join(', ') + ')';
 
     var $selected_city = $('#Search #MLS-City ul li.active');
     var selected_city_array = new Array();
+    var selected_cityname_array = new Array();
     for (var city = 0; city < $selected_city.length; city++) {
         selected_city_array.push(parseInt($selected_city.eq(city).attr('cui-option')));
+        selected_cityname_array.push($selected_city.eq(city).text());
     }
+    // params for recent searches
+    valid_search = (selected_city_array.length > 0) ? true : valid_search;
+    search_params += '|' + selected_city_array.join(',');
+    if (selected_cityname_array.length > 0)
+        search_descr += ', Cities (' + selected_cityname_array.join(', ') + ')';
 
     var $selected_school = $('#Search #MLS-School ul li.active');
     var selected_school_array = new Array();
+    var selected_schoolname_array = new Array();
     for (var school = 0; school < $selected_school.length; school++) {
         selected_school_array.push(parseInt($selected_school.eq(school).attr('cui-option')));
+        selected_schoolname_array.push($selected_school.eq(school).text());
     }
+    // params for recent searches
+    valid_search = (selected_school_array.length > 0) ? true : valid_search;
+    search_params += '|' + selected_school_array.join(',');
+    if (selected_schoolname_array.length > 0)
+        search_descr += ', Schools (' + selected_schoolname_array.join(', ') + ')';
 
     // remove items that do not match price filter
     for (item = filtered_property_objects_array.length - 1; item >= 0; item--) {
@@ -1541,9 +1987,7 @@ function search_properties() {
                     removed = true;
                 }
             }
-        }
-
-        
+        }        
 
         if (!removed) {
             var price = property_object.price;
@@ -1552,7 +1996,7 @@ function search_properties() {
                 removed = true;
             }
         }
-        if (property_type == 'Residential') {
+        if (property_type == 1) {
             if (!removed) {
                 var bedrooms = property_object.bedrooms;
                 if (bedrooms < min_beds || bedrooms > max_beds) {
@@ -1593,21 +2037,35 @@ function search_properties() {
         }
     }
 
-
-    // now re-sort
-    sort_search();
-
-    close_search();
-}
-function sort_search() {
-    remove_markers_and_listings();
-
-    if (filtered_key != null && filtered_asc != null) {
-        sort_filter_array_by_key(filtered_key, filtered_asc);
+    display_results_count(filtered_property_objects_array.length, true);
+    if (filtered_property_objects_array.length > 0) {
+        close_search();
+        close_type_overlays();
+        if (valid_search)
+            store_search(search_params, search_descr);
     }
+}
+function store_search(params, descr) {
+    if (has_local_storage) {
+        var stored_searches = localStorage["stored_searches"];
 
-    tied_markers = new Array();
-    add_markers_to_map(0);
+        if (stored_searches != null) {
+            // verify that search does not already exist
+            var exists = false;
+            var stored_search_array = stored_searches.split(';');
+            for (var search = 0; search < stored_search_array.length; search++) {
+                var search_array = stored_search_array[search].split(':');
+                if (search_array[0] == params)
+                    exists = true;
+            }
+            if (!exists)
+                stored_searches += ';' + params + ':' + descr;
+        }
+        else
+            stored_searches = params + ':' + descr;
+        localStorage["stored_searches"] = stored_searches;
+    }
+    build_stored_property_list();
 }
 function close_search() {
     $('#Search').removeClass('active_panel');
@@ -1616,28 +2074,55 @@ function close_search() {
     $('#' + active_panel).addClass('active_panel');
 
     $('#Search-Navigation').hide();
+
+    display_sort();
+}
+function display_results_count(items, display) {
+    if (display) {
+        if (items > 0) 
+            $('#Results_Message p').html(items + ' Listing' + (items != 1 ? 's' : '') + ' Found');
+        else
+            $('#Results_Message p').html('No Listings Found<br />Please Adjust Your Search');
+        $('#Results_Message').fadeIn();
+        setTimeout('display_results_count(null, false);', 2000);
+    } else {
+        $('#Results_Message').stop().fadeOut();
+    }
 }
 
 function update_search_type(type) {
     if (type == "mls") {
         $("#Search-Navigation div.subnav span.mls").addClass('active');
         $("#Search-Navigation div.subnav span.details").removeClass('active');
+        $("#Search-Navigation div.subnav span.saved").removeClass('active');
         $("#Search div.details-search").hide();
         $("#Search div.mls-search").show();
+        $("#Search div.saved-search").hide();
+        $("#Search-Navigation span.search").show();
         $("#Search-Navigation span.search").unbind('click').click(function () {
             load_property_by_search();
         });
-    } else {
+    } else if (type == "details") {
         $("#Search-Navigation div.subnav span.mls").removeClass('active');
         $("#Search-Navigation div.subnav span.details").addClass('active');
+        $("#Search-Navigation div.subnav span.saved").removeClass('active');
         $("#Search div.details-search").show();
         $("#Search div.mls-search").hide();
+        $("#Search div.saved-search").hide();
+        $("#Search-Navigation span.search").show();
         $("#Search-Navigation span.search").unbind('click').click(function () {
             search_properties();
         });
+    }else{
+        $("#Search-Navigation div.subnav span.mls").removeClass('active');
+        $("#Search-Navigation div.subnav span.details").removeClass('active');
+        $("#Search-Navigation div.subnav span.saved").addClass('active');
+        $("#Search div.details-search").hide();
+        $("#Search div.mls-search").hide();
+        $("#Search div.saved-search").show();
+        $("#Search-Navigation span.search").hide();
     }
 }
-
 function display_overlay_options(obj, display) {
     if (display) {
         var $options = $(obj).parent().find('div.cui-overlay-options');
@@ -2285,6 +2770,29 @@ function load_property_neighborhood($property) {
         var $content = $(content);
         $("#Property-Details").append($content);
     }
+
+    size_youtube_frames();
+}
+function size_youtube_frames() {
+    var $youtubes = $("div.neighborhood iframe[src^='//www.youtube.com']");
+    $youtubes.each(function (index) {
+        var $youtube = $(this);
+        var aspect_ratio = 56;
+
+        if ($youtube.is('[width]') && $youtube.is('[height]')) {
+            var height = parseInt($youtube.attr('height'));
+            var width = parseInt($youtube.attr('width'));
+            $youtube.removeAttr('height');
+            $youtube.removeAttr('width');
+            aspect_ratio = height / width * 100;
+        }
+        $youtube.css({ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' });
+
+        $wrapper = $('<div class="youtube-wrapper"></div>');
+        $wrapper.css({ position: 'relative', paddingBottom: aspect_ratio + '%', height: 0 });
+
+        $youtube.wrap($wrapper);
+    });
 }
 function load_property_map($property) {
     var content = '<div class="property-map">';
@@ -2298,7 +2806,14 @@ function load_property_map($property) {
     var property_location = new google.maps.LatLng($property.find('latitude').text(), $property.find('longitude').text());
     var property_map_options = { zoom: 14, center: property_location, mapTypeId: google.maps.MapTypeId.ROADMAP, draggable: false, scrollwheel: false };
     var property_map = new google.maps.Map(document.getElementById('Property-Map'), property_map_options);
-    var property_marker = new google.maps.Marker({ position: property_location, map: property_map, draggable: false, icon: '../res/images/icons/home_marker.png' });
+    var icon_image = {
+        url: '../res/images/icons/home_marker.png',
+        size: new google.maps.Size(60, 80),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(15, 40),
+        scaledSize: new google.maps.Size(30, 40)
+    };
+    var property_marker = new google.maps.Marker({ position: property_location, map: property_map, draggable: false, icon: icon_image });
 
 }
 function load_property_disclaimer($property) {
@@ -2321,4 +2836,9 @@ $(document).ready(function () {
         size_property_photos();
     });
 });
+
+
+
+
+
 

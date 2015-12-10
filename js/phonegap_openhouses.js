@@ -757,6 +757,29 @@ function load_property_neighborhood($property) {
         var $content = $(content);
         $("#Property-Details").append($content);
     }
+
+    size_youtube_frames();
+}
+function size_youtube_frames() {
+    var $youtubes = $("div.neighborhood iframe[src^='//www.youtube.com']");
+    $youtubes.each(function (index) {
+        var $youtube = $(this);
+        var aspect_ratio = 56;
+
+        if ($youtube.is('[width]') && $youtube.is('[height]')) {
+            var height = parseInt($youtube.attr('height'));
+            var width = parseInt($youtube.attr('width'));
+            $youtube.removeAttr('height');
+            $youtube.removeAttr('width');
+            aspect_ratio = height / width * 100;
+        }
+        $youtube.css({ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' });
+
+        $wrapper = $('<div class="youtube-wrapper"></div>');
+        $wrapper.css({ position: 'relative', paddingBottom: aspect_ratio + '%', height: 0 });
+
+        $youtube.wrap($wrapper);
+    });
 }
 function load_property_map($property) {
     var content = '<div class="property-map">';
@@ -770,7 +793,14 @@ function load_property_map($property) {
     var property_location = new google.maps.LatLng($property.find('latitude').text(), $property.find('longitude').text());
     var property_map_options = { zoom: 14, center: property_location, mapTypeId: google.maps.MapTypeId.ROADMAP, draggable: false, scrollwheel: false };
     var property_map = new google.maps.Map(document.getElementById('Property-Map'), property_map_options);
-    var property_marker = new google.maps.Marker({ position: property_location, map: property_map, draggable: false, icon: '../res/images/icons/home_marker.png' });
+    var icon_image = {
+        url: '../res/images/icons/home_marker.png',
+        size: new google.maps.Size(60, 80),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(15, 40),
+        scaledSize: new google.maps.Size(30, 40)
+    };
+    var property_marker = new google.maps.Marker({ position: property_location, map: property_map, draggable: false, icon: icon_image });
     
 }
 function load_property_disclaimer($property) {

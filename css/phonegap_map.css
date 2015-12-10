@@ -77,6 +77,9 @@
 }           
 	#Search-Navigation div div span.search i {
 		background-image: url(../res/images/icons/icon_go.png);
+	}   
+	#Search-Navigation div div span.clear i {
+		background-image: url(../res/images/icons/icon_delete.png);
 	}        
 	#Search-Navigation div div span.cancel i {
 		background-image: url(../res/images/icons/icon_back.png);
@@ -88,10 +91,10 @@
         overflow: hidden;
     }
 	#Search-Navigation div.subnav div{
-		max-width:300px;
-		margin:0px auto;
+		float:left;
 	}
     #Search-Navigation div.subnav label{
+        display: none;
         float:left;
         margin: 0px 8px 0px 8px;
         height: 29px;
@@ -102,13 +105,14 @@
     #Search-Navigation div.subnav p{
         float:left;
         height: 29px;
+        margin: 0px 0px 0px 8px;
         overflow: hidden;
         }
         #Search-Navigation div.subnav p span{
             float:left;
             height: 17px;
             padding: 0px 6px 0px 6px;
-            margin: 5px 8px 5px 0px;
+            margin: 5px 0px 5px 0px;
             border: 1px solid #fff;
             font-size: 12px;
             line-height: 17px;
@@ -484,6 +488,13 @@ div.active_panel {
     background:#ccc;
     overflow:auto;
 }
+    #Sort h1 {
+        padding-top: 20px;
+        font-size: 18px;
+        color: #2b4e5a;
+        text-align: center;
+        text-shadow: 0px 1px 1px #fff;
+    }
     #Sort ul{   
         margin: 20px 0px 20px 0px; 
         background:#ffffff;            
@@ -506,7 +517,92 @@ div.active_panel {
                 background-color: #9aa9ae;
             }
 
-#Search{
+    #Sort div.sort-address{
+        display: none;
+    }
+        #Sort div.sort-address div.current-location {
+            padding: 0px 20px 20px 20px;
+        }
+    #Sort div.sort-address h3 {
+        padding-top: 20px;
+        font-size: 14px;
+        color: #2b4e5a;
+        text-align: center;
+        text-shadow: 0px 1px 1px #fff;
+    }
+    #Sort div.sort-address span.button {
+        display: block;
+        clear: both;
+        margin-top: 10px;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        font-size: 14px;
+        line-height: 30px;
+        text-align: center;
+        color: #2b4e5a;
+        background: #ffcc00;
+        box-shadow: 0px 0px 4px rgba(0,0,0,.6);
+        -webkit-box-shadow: 0px 0px 4px rgba(0,0,0,.6);
+        -moz-box-shadow: 0px 0px 4px rgba(0,0,0,.6);
+        cursor: pointer;
+    }
+        #Sort div.sort-address div.address-entry div.submit {
+            clear: both;
+            padding-top: 10px;
+        }
+        #Sort div.sort-address div.address-entry form {
+            padding: 0px 20px 20px 20px;
+        }
+        #Sort div.sort-address div.address-entry label {
+            display: block;
+            font-size: 12px;
+            line-height: 14px;
+            color: #2b4e5a;
+        }
+        #Sort div.sort-address div.address-entry input {
+            width: 100%;
+            height: 30px;
+            padding: 0px 4px 0px 4px;
+            margin-bottom: 4px;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            font-size: 14px;
+            line-height: 28px;
+            color: #2b4e5a;
+            border-radius: 3px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border: 1px solid #bbb;
+        }
+        #Sort div.sort-address div.address-entry div.city{
+            float:left;
+            width: 50%;
+            padding-right: 4px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+        #Sort div.sort-address div.address-entry div.state{
+            float:left;
+            width: 20%;
+            padding-left: 4px;
+            padding-right: 4px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+        #Sort div.sort-address div.address-entry div.zip{
+            float:left;
+            width: 30%;
+            padding-left: 4px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+#Search{    
     position: absolute;
     left:0px;
     top:80px;
@@ -516,13 +612,22 @@ div.active_panel {
     overflow:auto;
     box-sizing: border-box;
 }
+    #Search h1 {
+        padding-top: 20px;
+        font-size: 18px;
+        color: #2b4e5a;
+        text-align: center;
+        text-shadow: 0px 1px 1px #fff;
+    }
     #Search div.details-search{
         display: block;
-    }
+    }    
     #Search div.mls-search{
         display: none;
-        padding: 20px;
-    }
+    } 
+        #Search div.mls-search form{
+            padding:0px 20px 20px 20px;
+        }
         #Search div.mls-search label {
             display: block;
             font-size: 12px;
@@ -549,15 +654,15 @@ div.active_panel {
             overflow:hidden;
         }
             #Search div.mls-search div.stored_list h3 {
+                padding: 0px 20px 0px 20px;
                 border-bottom: 1px solid #ccc;
                 font-size: 14px;
                 line-height: 26px;
-                font-weight: normal;
-                color: #231f20;
+                color: #2b4e5a;
             }
             #Search div.mls-search div.stored_list div {
                 position: relative;
-                height: 30px;
+                height: 40px;
                 background:#ffffff;
                 border-bottom: 1px solid #ccc;
                 overflow: hidden;
@@ -566,15 +671,52 @@ div.active_panel {
                     display: block;
                     padding-left: 8px;
                     margin-right: 30px;
-                    height: 30px;
-                    line-height: 30px;
+                    height: 40px;
+                    line-height: 40px;
                 }
                 #Search div.mls-search div.stored_list div span{
                     position: absolute;
                     top:0px;
                     right:0px;
-                    width:30px;
-                    height: 30px;
+                    width: 32px;
+                    height: 40px;
+                    /*update path*/
+                    background-image: url(../res/images/icons/icon_delete.png);
+                    background-repeat: no-repeat;
+                    background-size: 16px 16px;
+                    background-position: center center;
+                }
+    #Search div.saved-search{
+        display: none;
+    }
+        #Search div.saved-search div.stored_list{
+            margin-top:30px;
+            overflow:hidden;
+        }
+            #Search div.saved-search div.stored_list div {
+                position: relative;
+                min-height: 40px;
+                background:#ffffff;
+                border-bottom: 1px solid #ccc;
+                overflow: hidden;
+            }
+                #Search div.saved-search div.stored_list div label {
+                    display: block;
+                    padding: 12px 0px 12px 8px;
+                    margin-right: 40px;
+                    min-height: 16px;
+                    max-height: 80px;
+                    line-height: 16px;
+                    font-size: 12px;
+                    color: #2b4e5a;
+                    overflow: hidden;
+                }
+                #Search div.saved-search div.stored_list div span{
+                    position: absolute;
+                    top:0px;
+                    right:0px;
+                    width: 32px;
+                    height: 40px;
                     /*update path*/
                     background-image: url(../res/images/icons/icon_delete.png);
                     background-repeat: no-repeat;
@@ -1175,7 +1317,7 @@ div.active_panel {
                 color: #ffffff;
         }
         #Property-Container #Property-Details div.property-map #Property-Map{
-            height: 140px;
+            height: 240px;
             width: 100%;
         }
 
@@ -1308,4 +1450,33 @@ div.active_panel {
                     float: right;
                     background-image: url(../res/images/icons/icon_list.png);
                 }
+
+#Results_Message{
+    display: none;
+    z-index: 1200;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    float: left;
+    margin-left: -75px;
+    width: 150px;
+    min-height: 60px;
+    background: #fff;
+    text-align: center;
+    border-radius: 4px;
+    box-shadow: 0px 0px 8px rgba(0,0,0, 0.7);
+}
+    #Results_Message img {
+        width: 16px;
+        height: 16px;
+        margin-top: 12px;
+        vertical-align: bottom;
+    }
+    #Results_Message p {
+        clear: both;
+        padding-bottom: 12px;
+        color: #41636e;
+        font-size: 14px;
+        line-height: 20px;
+    }
 
