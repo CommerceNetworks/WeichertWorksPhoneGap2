@@ -26,7 +26,7 @@
   
   <gap:plugin name="org.apache.cordova.geolocation" />
   <gap:plugin name="cordova-plugin-inappbrowser" />
-  <gap:plugin name="cordova-plugin-whitelist" src="npm"/>
+  <gap:plugin name="com.indigoway.cordova.whitelist.whitelistplugin"/>
   
   <allow-intent href="http://*/*" />
   <allow-intent href="https://*/*" />
