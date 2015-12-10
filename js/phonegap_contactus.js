@@ -27,7 +27,7 @@
         }
 		
 		$.support.cors=true;
-		$.mobile.allowCrossDomainPages=true;
+	
 		
         $.ajax({
             type: "POST",

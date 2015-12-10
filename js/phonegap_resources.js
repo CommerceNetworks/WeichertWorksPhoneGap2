@@ -1,7 +1,7 @@
 ﻿var $xml = null;
 function retrieve_resources_xml() {
 	$.support.cors=true;
-	$.mobile.allowCrossDomainPages=true;
+
     var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=Resources";
     $.ajax({
         url: ajaxUrl,

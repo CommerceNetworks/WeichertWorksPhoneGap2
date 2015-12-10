@@ -42,7 +42,7 @@ $(document).ready(function () {
 var $xml = null;
 function retrieve_open_houses_xml() {
 	$.support.cors=true;
-	$.mobile.allowCrossDomainPages=true;
+
     var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=OpenHouses";
     $.ajax({
         url: ajaxUrl,
@@ -290,7 +290,7 @@ function set_up_property_display_pinchzoom() {
 function load_property(mls) {
     $('#Loading').show();
 	$.support.cors=true;
-	$.mobile.allowCrossDomainPages=true;
+
     var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=Property&mls=" + mls;
     $.ajax({
         url: ajaxUrl,
