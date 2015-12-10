@@ -283,6 +283,8 @@ function initiate_map() {
     });
 }
 function retrieve_properties() {
+	$.support.cors=true;
+	$.mobile.allowCrossDomainPages=true;
     var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=Search";
     $.ajax({
         url: ajaxUrl,
@@ -2301,6 +2303,8 @@ function set_up_property_display_pinchzoom() {
 
 function load_property(mls) {
     $('#Loading').show();
+	$.support.cors=true;
+	$.mobile.allowCrossDomainPages=true;
 
     var ajaxUrl = "http://www.porterproperties.com/app/ajax/?Type=Property&mls=" + mls;
     $.ajax({

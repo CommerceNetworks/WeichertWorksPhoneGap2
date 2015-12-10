@@ -25,7 +25,10 @@
             query += "&CitiesNeighborhoods=" + $("#RelocationNeighborhoods textarea").val();
             query += "&MovingDate=" + $("#tbMovingDate").val();
         }
-
+		
+		$.support.cors=true;
+		$.mobile.allowCrossDomainPages=true;
+		
         $.ajax({
             type: "POST",
             url: "http://www.porterproperties.com/app/ajax/?Type=Contact",
