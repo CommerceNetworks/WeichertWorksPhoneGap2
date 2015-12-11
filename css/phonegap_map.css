@@ -9,11 +9,11 @@
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
     -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,.8);
 }
-	div.map-navigation > div{
-		max-width: 800px;
-			margin: 0px auto;
-			overflow: hidden;
-	}
+    div.map-navigation > div {
+        max-width: 800px;
+        margin: 0px auto;
+        overflow: hidden;
+    }
     div.map-navigation div div span {
         float: left;
         height: 30px;
@@ -147,22 +147,77 @@
 div.active_panel {
     z-index: 997;
 }
-#Loading {
-    z-index: 1002;
+#Loading{
+    z-index: 1000;
     position: fixed;
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
-    background: rgba(255,255,255,.8);
+    background:rgba(255,255,255,.8);
 }
-    #Loading img {
+    #Loading div:first-child {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -32px;
-        margin-left: -32px;
+        width: 50px;
+        height: 50px;
+        margin: -25px 0px 0px -25px;        
+        border: 5px solid #5d7f8a;
+        opacity: .9;
+        border-top: 5px solid rgba(0,0,0,0);
+        border-left: 5px solid rgba(0,0,0,0);
+        border-radius: 50px;        
+        -moz-animation: spin 1s infinite linear;
+        -webkit-animation: spin 1s infinite linear;
     }
+    #Loading div:last-child {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0px 0px -15px;
+        border: 5px solid #41636e;
+        opacity: .9;
+        border-top: 5px solid rgba(0,0,0,0);
+        border-left: 5px solid rgba(0,0,0,0);
+        border-radius: 50px;
+        -moz-animation: spinoff 1s infinite linear;
+        -webkit-animation: spinoff 1s infinite linear;
+    }
+@-moz-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes spinoff {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(-360deg);
+    }
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes spinoff {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(-360deg);
+    }
+}
 
 #Map{
     position: absolute;

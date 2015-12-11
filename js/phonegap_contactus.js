@@ -12,23 +12,22 @@
         query += "&Zip=" + $('#tbZip').val();
         query += "&Comments=" + $('#tbComments').val();
 
-        var relocation = $("#ContactForm input[type=hidden]").val().length > 0;
-        query += "&Relocation=" + relocation;
-        if (relocation) {
-            query += "&HasAgent=" + $('input[type=radio][name="agent"]:checked').val();
-            var $interests = $('input[type=radio][name="interests"]:checked');
-            var interests_array = new Array();
-            for(var i = 0; i < $interests.length; i++)
-                interests_array.push($interests.eq(0).val());
-            query += "&Interests=" + interests_array.join(',');
-            query += "&Moving=" + $('input[type=radio][name="agent"]:checked').val();
-            query += "&CitiesNeighborhoods=" + $("#RelocationNeighborhoods textarea").val();
-            query += "&MovingDate=" + $("#tbMovingDate").val();
-        }
+        //var relocation = $("#ContactForm input[type=hidden]").val().length > 0;
+        //query += "&Relocation=" + relocation;
+        //if (relocation) {
+        //    query += "&HasAgent=" + $('input[type=radio][name="agent"]:checked').val();
+        //    var $interests = $('input[type=radio][name="interests"]:checked');
+        //    var interests_array = new Array();
+        //    for(var i = 0; i < $interests.length; i++)
+        //        interests_array.push($interests.eq(0).val());
+        //    query += "&Interests=" + interests_array.join(',');
+        //    query += "&Moving=" + $('input[type=radio][name="agent"]:checked').val();
+        //    query += "&CitiesNeighborhoods=" + $("#RelocationNeighborhoods textarea").val();
+        //    query += "&MovingDate=" + $("#tbMovingDate").val();
+        //}
 		
-		$.support.cors=true;
-	
-		
+        $('#Loading').show();
+		$.support.cors=true;		
         $.ajax({
             type: "POST",
             url: "http://www.porterproperties.com/app/ajax/?Type=Contact",
@@ -36,12 +35,14 @@
             contentType: "application/x-www-form-urlencoded",
             cache: false
         }).done(function (data) {
+            $('#Loading').hide();
             $('#ContactForm').slideUp();
             $('#Contact_Success').html(data);
             $('#Contact_Success').slideDown(function () {
                 $(this).animate({ opacity: 1 });
             });
         }).fail(function () {
+            $('#Loading').hide();
             alert('request failed to send');
         });        
     }
@@ -230,7 +231,8 @@ $(document).ready(function () {
     geocoder = new google.maps.Geocoder();
     initialize_map();
     $('#Contact_Overlay').stop().hide();
-	$("#contact_form").submit(function () { submit_request(); return false; });
+    $("#contact_form").submit(function () { submit_request(); return false; });
+    $('#Loading').hide();
     //$("#LookingToMove").click(function () { updateRelocationForm() });
     //if ($("#ContactForm input:hidden").val().length > 0) {
     //    updateRelocationForm();
