@@ -2778,7 +2778,7 @@ function load_property_neighborhood($property) {
     size_youtube_frames();
 }
 function size_youtube_frames() {
-    var $youtubes = $("div.neighborhood iframe[src^='//www.youtube.com']");
+    var $youtubes = $("div.neighborhood iframe[src^='http://www.youtube.com']");
     $youtubes.each(function (index) {
         var $youtube = $(this);
         var aspect_ratio = 56;
