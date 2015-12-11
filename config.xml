@@ -33,6 +33,7 @@
   <allow-intent href="sms:*" />
   <allow-intent href="tel:*" />
   <allow-intent href="geo:*" />
+  <allow-intent href="mailto:*" />
     
   <access origin="*" />
 
@@ -78,7 +79,7 @@
   <icon src="res/icon/icon-50.png" platform="ios" width="50" height="50" />
   <icon src="res/icon/icon-50@2x.png" platform="ios" width="100" height="100" />
   
-  <!-- Andriod -->
+  <!-- android -->
   <icon src="res/icon/mdpi-48.png" platform="android" qualifier="mdpi" />
   <icon src="res/icon/hdpi-72.png" platform="android" qualifier="hdpi" />
   <icon src="res/icon/xhdpi-96.png" platform="android" qualifier="xhdpi" />
@@ -104,13 +105,13 @@
   <!-- Retina iPad -->
   <splash src="res/splash/ios-portrait-768x1024@2x.png" platform="ios" width="1536" height="2048" />
   <splash src="res/splash/ios-landscape-768x1024@2x.png" platform="ios" width="2048" height="1536" />
-  <!-- Andriod -->
-  <splash src="res/splash/andriod-ldpi-200x320.png" platform="android" qualifier="ldpi" />
-  <splash src="res/splash/andriod-mdpi-320x480.png" platform="android" qualifier="mdpi" />
-  <splash src="res/splash/andriod-hdpi-480x800.png" platform="android" qualifier="hdpi" />
-  <splash src="res/splash/andriod-xhdpi-720x1280.png" platform="android" qualifier="xhdpi" />
-  <splash src="res/splash/andriod-xxhdpi-960x1600.png" platform="android" qualifier="port-xxhdpi" />
-  <splash src="res/splash/andriod-xxhdpi-1280x1920.png" platform="android" qualifier="land-xxhdpi" />  
+  <!-- android -->
+  <splash src="res/splash/android-ldpi-200x320.png" platform="android" qualifier="ldpi" />
+  <splash src="res/splash/android-mdpi-320x480.png" platform="android" qualifier="mdpi" />
+  <splash src="res/splash/android-hdpi-480x800.png" platform="android" qualifier="hdpi" />
+  <splash src="res/splash/android-xhdpi-720x1280.png" platform="android" qualifier="xhdpi" />
+  <splash src="res/splash/android-xxhdpi-960x1600.png" platform="android" qualifier="port-xxhdpi" />
+  <splash src="res/splash/android-xxhdpi-1280x1920.png" platform="android" qualifier="land-xxhdpi" />  
   <!-- Windows Phone (should be in jpg) -->
   <splash src="res/splash/winphone/splash.jpg" platform="winphone" />
 </widget>
