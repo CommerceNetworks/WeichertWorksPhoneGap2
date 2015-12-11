@@ -779,7 +779,7 @@ function size_youtube_frames() {
         $youtube.css({ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' });
 
         $wrapper = $('<div class="youtube-wrapper"></div>');
-        $wrapper.css({ position: 'relative', paddingBottom: aspect_ratio + '%', height: 0 });
+        $wrapper.css({ position: 'relative', paddingBottom: aspect_ratio + '%', height: 0, width: '100%', overflow: 'hidden' });
 
         $youtube.wrap($wrapper);
     });
