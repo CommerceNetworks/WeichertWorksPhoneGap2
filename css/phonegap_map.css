@@ -223,7 +223,7 @@ div.active_panel {
     position: absolute;
     left:0px;
     top:50px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
 }
     #Map #Map_Container{
@@ -432,7 +432,7 @@ div.active_panel {
     position: absolute;
     left:0px;
     top:50px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
     background:#ccc;
     overflow:auto;
@@ -538,7 +538,7 @@ div.active_panel {
     position: absolute;
     left:0px;
     top:50px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
     background:#ccc;
     overflow:auto;
@@ -661,7 +661,7 @@ div.active_panel {
     position: absolute;
     left:0px;
     top:80px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
     background:#ccc;
     overflow:auto;
@@ -717,7 +717,7 @@ div.active_panel {
             }
             #Search div.mls-search div.stored_list div {
                 position: relative;
-                height: 40px;
+                height: 44px;
                 background:#ffffff;
                 border-bottom: 1px solid #ccc;
                 overflow: hidden;
@@ -1049,7 +1049,7 @@ div.active_panel {
             z-index: 3;
             position:fixed;
             top:80px;
-            bottom: 40px;
+            bottom: 44px;
             left: 0px;
             right:0px;
 			padding-top:30px;
@@ -1135,7 +1135,7 @@ div.active_panel {
         left: 0px;
         right: 0px;
         top: 50px;
-        bottom: 40px;
+        bottom: 44px;
         background: #ccc;
         overflow: auto;
         padding: 0px;
@@ -1389,7 +1389,7 @@ div.active_panel {
         position: absolute;
         top: 50px;
         left: 0px;
-        bottom: 40px;
+        bottom: 44px;
         right: 0px;
         padding: 10px;
         background:#ccc;

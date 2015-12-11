@@ -34,7 +34,7 @@ body{
     position: absolute;
     left:0px;
     top:50px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
     background:#ccc;
     overflow:auto;
@@ -141,7 +141,7 @@ body{
         #Navigation div div {
             float: left;
             width: 16.6667%;
-            height: 40px;
+            height: 44px;
         }
             #Navigation div div a i {
                 display: none;
@@ -149,32 +149,26 @@ body{
             #Navigation div div a span {
                 display: block;
                 width: 100%;
-                height: 40px;
+                height: 44px;
                 background-size: 32px 32px;
                 background-repeat: no-repeat;
                 background-position: center center;
             }
             #Navigation div div.search a span {
-                /*update path*/
                 background-image: url(../res/images/icons/icon_search.png);
             }
             #Navigation div div.nearby a span{
-                /*update path*/
                 background-image:url(../res/images/icons/icon_explore.png);
             }
             #Navigation div div.openhouses a span{
-                /*update path*/
                 background-image:url(../res/images/icons/icon_home.png);
             }
             #Navigation div div.resources a span{
-                /*update path*/
                 background-image:url(../res/images/icons/icon_info.png);
             }
             #Navigation div div.careers a span{
-                /*update path*/
                 background-image:url(../res/images/icons/icon_work.png);
             }
             #Navigation div div.contact a span{
-                /*update path*/
                 background-image:url(../res/images/icons/icon_question_answer.png);
             }

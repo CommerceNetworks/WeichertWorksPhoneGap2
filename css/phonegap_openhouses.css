@@ -93,7 +93,7 @@
     position: absolute;
     left:0px;
     top:50px;
-    bottom:40px;
+    bottom:44px;
     width:100%;
     background:#ccc;
     overflow:auto;
@@ -287,7 +287,7 @@ div.map-navigation{
         left: 0px;
         right: 0px;
         top: 50px;
-        bottom: 40px;
+        bottom: 44px;
         background: #ccc;
         overflow: auto;
         padding: 0px;
@@ -546,7 +546,7 @@ div.map-navigation{
         position: absolute;
         top: 50px;
         left: 0px;
-        bottom: 40px;
+        bottom: 44px;
         right: 0px;
         padding: 10px;
         background:#ccc;
