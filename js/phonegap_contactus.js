@@ -1,4 +1,4 @@
-﻿function submit() {
+﻿function submit_request() {
     if (validate_form()) {
         var query = "";
         query += "FirstName=" + $('#tbFirstName').val();
@@ -230,6 +230,7 @@ $(document).ready(function () {
     geocoder = new google.maps.Geocoder();
     initialize_map();
     $('#Contact_Overlay').stop().hide();
+	$("#contact_form").submit(function () { submit_request(); return false; });
     //$("#LookingToMove").click(function () { updateRelocationForm() });
     //if ($("#ContactForm input:hidden").val().length > 0) {
     //    updateRelocationForm();
