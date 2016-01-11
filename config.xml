@@ -1,16 +1,16 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
 <widget xmlns = "http://www.w3.org/ns/widgets"
-   xmlns:gap = "http://apache.org/cordova/ns/plugins/1.0" id = "com.commercenetworks.weichertworks" version = "2.0" versioncode="7">
+   xmlns:gap = "http://apache.org/cordova/ns/plugins/1.0" id = "com.commercenetworks.weichertworks" version = "2.0.1" versioncode="8">
 
-  <name>Weichert Works</name>
+  <name>Weichert Realtors - Porter Properties</name>
 
   <description>
-    Weichert Works Realty App
+    Weichert Realtors - Porter Properties Realty App
   </description>
 
   <author href = "http://commercenetworks.com" email = "support@commercenetworks.com">
-    Michael Reutebuch and Lee Anderson
+    Lee Anderson and Mike Reutebuch
   </author>
 
   <preference name="orientation" value="portrait" />
