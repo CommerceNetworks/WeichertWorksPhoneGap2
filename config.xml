@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
 <widget xmlns = "http://www.w3.org/ns/widgets"
-   xmlns:gap = "http://apache.org/cordova/ns/plugins/1.0" id = "com.commercenetworks.weichertworks" version = "2.0.1" versioncode="8">
+   xmlns:gap = "http://apache.org/cordova/ns/plugins/1.0" id = "com.commercenetworks.welchertworks" version = "2.0.1" versioncode="8">
 
   <name>Weichert Realtors - Porter Properties</name>
 
